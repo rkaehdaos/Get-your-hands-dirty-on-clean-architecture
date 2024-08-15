@@ -1,0 +1,56 @@
+name: 'Push Build(self-hosted)'
+on:
+  push:
+    branches-ignore: [ 'main' ]
+    tags-ignore: [ 'beta*' ]
+    paths-ignore: [ '.github/**' ]
+
+jobs:
+  Push_build:
+    name: Push_build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ self-hosted-linux ]
+
+    steps:
+      - name: '소스 checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Gradle Cache'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 'gradle build'
+        run: |
+          echo $ {{github.event.pull_request.state }}
+          echo $ {{github.event.pull_request.opened }}
+          ./gradlew build --stacktrace --parallel
+
+      - name: "Zip build reports"
+        if: failure()
+        run: zip -r reports.zip build/reports
+
+      - name: 'Upload a Build Artifact'
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: reports
+          path: reports.zip
+
+      - name: 'slack 알림'
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          author_name: my workflow bot
+          fields: repo,message,commit,author,eventName,ref,workflow,job,took,
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_KAI }}
