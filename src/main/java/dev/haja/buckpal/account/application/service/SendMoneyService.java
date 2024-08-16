@@ -3,8 +3,10 @@ package dev.haja.buckpal.account.application.service;
 import dev.haja.buckpal.account.application.port.in.SendMoneyCommand;
 import dev.haja.buckpal.account.application.port.in.SendMoneyUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component
 @RequiredArgsConstructor
 @Transactional
 public class SendMoneyService implements SendMoneyUseCase {
