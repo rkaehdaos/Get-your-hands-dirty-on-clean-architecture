@@ -15,43 +15,47 @@ import java.time.LocalDateTime;
  * @see Account
  */
 
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Account {
-    private final AccountId id;
+    @Getter private final AccountId id;
+    @Getter private ActivityWindow activityWindow;
     private final Money baselineBalance;
-    private ActivityWindow activityWindow;
 
     /**
      * id가 있는 Account 엔티티 생성 팩토리 메서드
      * 영속성 관련 엔티티 생성에 사용
      *
-     * @param accountId
-     * @param baselineBalance
-     * @param activityWindow
+     * @param accountId 계정 id
+     * @param activityWindow 활동 윈도우
+     * @param baselineBalance 기준 잔액
      * @return Account 엔티티
      */
-    public static Account withId(AccountId accountId, Money baselineBalance, ActivityWindow activityWindow) {
-        return new Account(accountId, baselineBalance, activityWindow);
+    public static Account withId(
+            AccountId accountId,
+            ActivityWindow activityWindow,
+            Money baselineBalance) {
+        return new Account(accountId, activityWindow, baselineBalance);
     }
 
     /**
      * id가 없는 Account 엔티티 생성 팩토리 메서드
      * 영속 되기 전 엔티티 생성에 사용
      *
-     * @param baselineBalance
-     * @param activityWindow
+     * @param activityWindow 활동 윈도우
+     * @param baselineBalance 기준 잔액
      * @return Account 엔티티
      */
-    public static Account withoutId(Money baselineBalance, ActivityWindow activityWindow) {
-        return new Account(null, baselineBalance, activityWindow);
+    public static Account withoutId(
+            ActivityWindow activityWindow,
+            Money baselineBalance) {
+        return new Account(null, activityWindow, baselineBalance);
     }
 
 
     /**
      * 계정의 총 잔액을 계산한다.
      *
-     * @return 계정의 총 잔액
+     * @return Money 계정의 총 잔액
      */
     public Money calculateBalance() {
         return Money.add(
@@ -59,7 +63,12 @@ public class Account {
                 this.activityWindow.calculateBalance(this.id));
     }
 
-    // 송금
+    /**
+     * 출금: 이 계좌에서 일정 금액을 출금하려고 시도
+     * @param money 출금 금액
+     * @param targetAccountId 대상 계좌 id
+     * @return 출금 성공 여부
+     */
     public boolean withdraw(Money money, AccountId targetAccountId) {
         // 비즈니스 규칙을 도메인 엔티티 안에 넣었다.
         if (!mayWithdraw(money)) {

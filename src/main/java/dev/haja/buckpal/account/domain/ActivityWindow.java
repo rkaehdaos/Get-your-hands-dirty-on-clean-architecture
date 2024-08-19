@@ -5,6 +5,7 @@ import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,5 +38,9 @@ public class ActivityWindow {
 
     public void addActivity(Activity activity) {
         this.activities.add(activity);
+    }
+
+    public List<Activity> getActivities() {
+        return Collections.unmodifiableList(this.activities);
     }
 }
