@@ -4,10 +4,12 @@ import dev.haja.buckpal.account.domain.Account.AccountId;
 import dev.haja.buckpal.account.domain.Money;
 import dev.haja.buckpal.common.SelfValidating;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class SendMoneyCommand extends SelfValidating<SendMoneyCommand> {
     @NotNull private final AccountId sourceAccountId;
     @NotNull private final AccountId targetAccountId;

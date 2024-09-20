@@ -37,7 +37,7 @@ public class AccountTestData {
         }
 
         public Account build() {
-            return Account.withId(null, activityWindow, baselineBalance);
+            return Account.withId(accountId, baselineBalance, activityWindow);
         }
     }
 

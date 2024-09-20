@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.2"
+    id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.graalvm.buildtools.native") version "0.10.2"
 }
@@ -45,9 +45,20 @@ dependencies {
 tasks.withType<JavaCompile> {
     // tasks.named("compileJava") 과 다름에 유의
     options.compilerArgs.add("-Xlint:deprecation")
+//    options.compilerArgs.add("-Xlint:unchecked")
     options.encoding = "UTF-8"
 }
 
 tasks.withType<Test> {
     // Test 유형의 모든 테스트 task 공통 configure 용
+}
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+    maxParallelForks = Runtime.getRuntime().availableProcessors()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+tasks.named("processTestAot").configure {
+    enabled = false
 }

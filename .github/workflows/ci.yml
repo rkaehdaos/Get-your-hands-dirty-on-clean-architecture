@@ -1,4 +1,4 @@
-name: 'Push Build(self-hosted)'
+name: 'Push Build'
 on:
   push:
     branches-ignore: [ 'main' ]
@@ -11,27 +11,27 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ self-hosted-linux ]
+        os: [ ubuntu-latest ]
 
     steps:
       - name: '소스 checkout'
         uses: actions/checkout@v4
 
-      - name: 'Gradle Cache'
-        uses: actions/cache@v4
+      # https://github.com/marketplace/actions/github-action-for-graalvm
+      - name: 'graalvm jdk21 setup'
+        uses: graalvm/setup-graalvm@v1
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'gradle'
 
       - name: 'gradle build'
         run: |
           echo $ {{github.event.pull_request.state }}
           echo $ {{github.event.pull_request.opened }}
-          ./gradlew build --stacktrace --parallel
+          gradle build --no-daemon --stacktrace --parallel
 
       - name: "Zip build reports"
         if: failure()

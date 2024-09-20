@@ -16,6 +16,7 @@ public abstract class SelfValidating<T> {
     /**
      * 이 인스턴스의 속성에 대한 모든 빈 유효성 검사를 평가합니다.
      */
+    @SuppressWarnings("unchecked")
     protected void validateSelf() {
         Set<ConstraintViolation<T>> violations = validator.validate((T) this);
         if (!violations.isEmpty()) {

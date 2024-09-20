@@ -4,6 +4,7 @@ import dev.haja.buckpal.account.application.port.out.LoadAccountPort;
 import dev.haja.buckpal.account.application.port.out.UpdateAccountStatePort;
 import dev.haja.buckpal.account.domain.Account;
 import dev.haja.buckpal.account.domain.Account.AccountId;
+import dev.haja.buckpal.account.domain.Activity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -58,5 +59,10 @@ class AccountPersistenceAdapter implements
 
     @Override
     public void updateActivities(Account account) {
+        for (Activity activity : account.getActivityWindow().getActivities()) {
+            if (activity.getId() == null) {
+                activityRepository.save(accountMapper.mapToJpaEntity(activity));
+            }
+        }
     }
 }

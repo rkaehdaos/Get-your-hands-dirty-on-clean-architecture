@@ -65,5 +65,4 @@ public class ActivityTestData {
                     this.money);
         }
     }
-
 }

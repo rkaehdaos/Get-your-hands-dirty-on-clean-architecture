@@ -4,8 +4,10 @@ import dev.haja.buckpal.account.domain.Account;
 
 import java.time.LocalDateTime;
 
+import static dev.haja.buckpal.account.domain.Account.AccountId;
+
 public interface LoadAccountPort {
     Account loadAccount(
-            Account.AccountId accountId,
+            AccountId accountId,
             LocalDateTime baselineDate);
 }
