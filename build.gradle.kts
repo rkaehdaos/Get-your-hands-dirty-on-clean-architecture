@@ -1,8 +1,9 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.3"
+    id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
-    id("org.graalvm.buildtools.native") version "0.10.2"
+    id("org.hibernate.orm") version "6.5.3.Final"
+    id("org.graalvm.buildtools.native") version "0.10.3"
 }
 
 group = "dev.haja"
