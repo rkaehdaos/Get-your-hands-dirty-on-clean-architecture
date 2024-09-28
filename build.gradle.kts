@@ -1,13 +1,18 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 plugins {
     java
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.hibernate.orm") version "6.5.3.Final"
     id("org.graalvm.buildtools.native") version "0.10.3"
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    kotlin("plugin.jpa") version "1.9.25"
 }
-
 group = "dev.haja"
-version = "0.0.1-SNAPSHOT"
+var releaseVer = "v0.0.1"
+version = "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(21) }
@@ -41,7 +46,11 @@ dependencies {
     // h2database
     runtimeOnly("com.h2database:h2")
     testImplementation("com.h2database:h2")
-
+}
+hibernate {
+    enhancement {
+        enableAssociationManagement = true
+    }
 }
 tasks.withType<JavaCompile> {
     // tasks.named("compileJava") 과 다름에 유의
