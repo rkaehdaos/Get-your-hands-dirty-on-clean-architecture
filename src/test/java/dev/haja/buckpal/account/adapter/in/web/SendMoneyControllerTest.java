@@ -35,10 +35,7 @@ class SendMoneyControllerTest {
         // given
         SendMoneyReqDto requestDto = new SendMoneyReqDto(1L, 2L, 500L);
         
-        // Mock 행동 정의
-        // `willDoNothing`은 void 메서드에서만 사용 가능
-        // SendMoneyUseCase 인터페이스의 sendMoney는 boolean 타입을 반환
-        // boolean 변환 타입에 맞게 willReturn(True)로 변경
+        // Mock 행동 정의 - 성공 케이스
         willReturn(true).given(sendMoneyUseCase).sendMoney(eq(new SendMoneyCommand(
                 new AccountId(1L),
                 new AccountId(2L),
@@ -48,10 +45,37 @@ class SendMoneyControllerTest {
         mockMvc.perform(
                 post("/accounts/send")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestDto))) //json 형식으로 설정
+                    .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk());
 
         // verify
+        then(sendMoneyUseCase).should()
+            .sendMoney(eq(new SendMoneyCommand(
+                new AccountId(1L),
+                new AccountId(2L),
+                Money.of(500L))));
+    }
+    
+    @Test
+    void testSendMoneyFailure() throws Exception {
+        // given
+        SendMoneyReqDto requestDto = new SendMoneyReqDto(1L, 2L, 500L);
+        
+        // Mock 행동 정의 - 실패 케이스 (false 반환)
+        willReturn(false).given(sendMoneyUseCase).sendMoney(eq(new SendMoneyCommand(
+                new AccountId(1L),
+                new AccountId(2L),
+                Money.of(500L))));
+
+        // when & then
+        mockMvc.perform(
+                post("/accounts/send")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(status().isBadRequest());
+
+        // verify
+        // SendMoneyUseCase.sendMoney() 메서드가 예상된 파라미터로 호출되었는지 확인
         then(sendMoneyUseCase).should()
             .sendMoney(eq(new SendMoneyCommand(
                 new AccountId(1L),
