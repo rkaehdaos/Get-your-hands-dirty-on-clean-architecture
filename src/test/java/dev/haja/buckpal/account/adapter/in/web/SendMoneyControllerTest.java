@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import dev.haja.buckpal.account.application.port.in.SendMoneyCommand;
 import dev.haja.buckpal.account.application.port.in.SendMoneyUseCase;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @WebMvcTest(controllers = SendMoneyController.class)
 class SendMoneyControllerTest {
@@ -75,11 +77,44 @@ class SendMoneyControllerTest {
             .andExpect(status().isBadRequest());
 
         // verify
-        // SendMoneyUseCase.sendMoney() 메서드가 예상된 파라미터로 호출되었는지 확인
         then(sendMoneyUseCase).should()
             .sendMoney(eq(new SendMoneyCommand(
                 new AccountId(1L),
                 new AccountId(2L),
                 Money.of(500L))));
+    }
+    
+    @Test
+    void testSendMoneyValidationFailure_NegativeAmount() throws Exception {
+        // given
+        SendMoneyReqDto requestDto = new SendMoneyReqDto(1L, 2L, -500L);
+        
+        // when & then
+        mockMvc.perform(
+                post("/accounts/send")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.amount").exists());
+        
+        // verify - 유효성 검사 실패로 인해 UseCase가 호출되지 않아야 함
+        verifyNoInteractions(sendMoneyUseCase);
+    }
+    
+    @Test
+    void testSendMoneyValidationFailure_NullSourceAccount() throws Exception {
+        // given
+        SendMoneyReqDto requestDto = new SendMoneyReqDto(null, 2L, 500L);
+        
+        // when & then
+        mockMvc.perform(
+                post("/accounts/send")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.sourceAccountId").exists());
+        
+        // verify - 유효성 검사 실패로 인해 UseCase가 호출되지 않아야 함
+        verifyNoInteractions(sendMoneyUseCase);
     }
 }
