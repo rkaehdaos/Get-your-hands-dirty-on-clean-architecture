@@ -24,10 +24,8 @@ class SendMoneyController {
                 Money.of(dto.amount()));
         boolean success = sendMoneyUseCase.sendMoney(command);
         
-        if (!success) {
+        if (!success)
             return ResponseEntity.badRequest().build();
-        }
-        
         return ResponseEntity.ok().build();
     }
 }
