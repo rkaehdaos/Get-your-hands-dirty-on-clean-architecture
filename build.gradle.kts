@@ -31,22 +31,37 @@ repositories {
 }
 
 dependencies {
-    // annotation
+    // spring
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.projectlombok:lombok")
-    testAnnotationProcessor("org.projectlombok:lombok")
-    // spring boot starter
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
+
     // h2database
     runtimeOnly("com.h2database:h2")
     testImplementation("com.h2database:h2")
+
+    // MapStruct
+    implementation("org.mapstruct:mapstruct:1.6.3")
+    testImplementation("org.mapstruct:mapstruct:1.6.3")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    testCompileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+
+    // Lombok과 MapStruct 통합
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+    testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 }
 hibernate {
     enhancement {
