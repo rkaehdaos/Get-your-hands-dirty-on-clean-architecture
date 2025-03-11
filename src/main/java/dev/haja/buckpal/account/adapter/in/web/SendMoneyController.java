@@ -4,6 +4,7 @@ import dev.haja.buckpal.account.application.port.in.SendMoneyCommand;
 import dev.haja.buckpal.account.application.port.in.SendMoneyUseCase;
 import dev.haja.buckpal.account.domain.Account.AccountId;
 import dev.haja.buckpal.account.domain.Money;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ class SendMoneyController {
     private final SendMoneyUseCase sendMoneyUseCase;
 
     @PostMapping(path = "/accounts/send")
-    ResponseEntity<Void> sendMoney(@RequestBody SendMoneyReqDto dto) {
+    ResponseEntity<Void> sendMoney(@Valid @RequestBody SendMoneyReqDto dto) {
         SendMoneyCommand command = new SendMoneyCommand(
                 new AccountId(dto.sourceAccountId()),
                 new AccountId(dto.targetAccountId()),
