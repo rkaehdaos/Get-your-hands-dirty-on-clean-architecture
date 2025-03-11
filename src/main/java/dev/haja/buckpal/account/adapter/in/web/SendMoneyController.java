@@ -7,6 +7,7 @@ import dev.haja.buckpal.account.domain.Money;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,15 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 class SendMoneyController {
     private final SendMoneyUseCase sendMoneyUseCase;
 
-    @PostMapping(path = "/accounts/send/{sourceAccountId}/{targetAccountId}/{amount}")
-    void sendMoney(
-            @PathVariable("sourceAccountId") Long sourceAccountId,
-            @PathVariable("targetAccountId") Long targetAccountId,
-            @PathVariable("amount") Long amount) {
+    @PostMapping(path = "/accounts/send")
+    void sendMoney(@RequestBody SendMoneyReqDto dto) {
         SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(
-                new AccountId(sourceAccountId),
-                new AccountId(targetAccountId),
-                Money.of(amount));
+                new AccountId(dto.sourceAccountId()),
+                new AccountId(dto.targetAccountId()),
+                Money.of(dto.amount()));
         sendMoneyUseCase.sendMoney(sendMoneyCommand);
     }
 }
