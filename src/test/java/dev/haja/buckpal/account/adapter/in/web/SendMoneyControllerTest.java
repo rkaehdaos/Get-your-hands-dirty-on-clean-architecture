@@ -23,14 +23,11 @@ import static org.mockito.Mockito.verifyNoInteractions;
 @WebMvcTest(controllers = SendMoneyController.class)
 class SendMoneyControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
     
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
     
-    @MockBean
-    private SendMoneyUseCase sendMoneyUseCase;
+    @MockBean private SendMoneyUseCase sendMoneyUseCase;
 
     @Test
     void testSendMoney() throws Exception {
