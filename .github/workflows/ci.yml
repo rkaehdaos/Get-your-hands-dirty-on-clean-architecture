@@ -44,13 +44,15 @@ jobs:
           name: reports
           path: reports.zip
 
-      - name: 'slack 알림'
-        uses: 8398a7/action-slack@v3
-        if: always()
+      - name: 'Post a message in a channel'
+        uses: slackapi/slack-github-action@v2.0.0
         with:
-          status: ${{ job.status }}
-          author_name: my workflow bot
-          fields: repo,message,commit,author,eventName,ref,workflow,job,took,
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_KAI }}
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_KAI }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "*GitHub Action build result*: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
