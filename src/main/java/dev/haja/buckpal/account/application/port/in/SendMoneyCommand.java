@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class SendMoneyCommand extends SelfValidating<SendMoneyCommand> {
+
     @NotNull private final AccountId sourceAccountId;
     @NotNull private final AccountId targetAccountId;
     @NotNull private final Money money;
@@ -19,8 +20,9 @@ public class SendMoneyCommand extends SelfValidating<SendMoneyCommand> {
         this.sourceAccountId = sourceAccountId;
         this.targetAccountId = targetAccountId;
         this.money = money;
-        if(!money.isPositiveOrZero()) {
-            throw new IllegalArgumentException("The money amount must be greater than or equal to zero");
+        if (!money.isPositiveOrZero()) {
+            throw new IllegalArgumentException(
+                "The money amount must be greater than or equal to zero");
         }
         validateSelf();
     }

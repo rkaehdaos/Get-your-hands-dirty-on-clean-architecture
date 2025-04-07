@@ -1,5 +1,6 @@
 package dev.haja.buckpal;
 
+import dev.haja.buckpal.account.adapter.in.web.SendMoneyReqDto;
 import dev.haja.buckpal.account.application.port.out.LoadAccountPort;
 import dev.haja.buckpal.account.domain.Account;
 import dev.haja.buckpal.account.domain.Money;
@@ -21,8 +22,11 @@ import static org.assertj.core.api.BDDAssertions.then;
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SendMoneySystemTest {
-    @Autowired private TestRestTemplate restTemplate;
-    @Autowired private LoadAccountPort loadAccountPort;
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+    @Autowired
+    private LoadAccountPort loadAccountPort;
 
     @Test
     @DisplayName("sendMoney: 요청 생성 -> App에 보내고 응답상태와 계좌의 새로운 잔고를 검증")
@@ -33,14 +37,15 @@ public class SendMoneySystemTest {
         Money initialTargetBalance = initialTargetBalance();
 
         // WHEN
-        ResponseEntity<Object> responseEntity = whenSendMoney(sourceAccountId(), targetAccountId());
+        ResponseEntity<SendMoneyReqDto> responseEntity = whenSendMoney(sourceAccountId(),
+            targetAccountId());
 
         // THEN
         then(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         then(sourceAccount().calculateBalance())
-                .isEqualTo(initialSourceBalance.minus(transferredAmount()));
+            .isEqualTo(initialSourceBalance.minus(transferredAmount()));
         then(targetAccount().calculateBalance())
-                .isEqualTo(initialTargetBalance.plus(transferredAmount()));
+            .isEqualTo(initialTargetBalance.plus(transferredAmount()));
     }
 
     private Money transferredAmount() {
@@ -67,19 +72,20 @@ public class SendMoneySystemTest {
         return getLoadAccount(sourceAccountId());
     }
 
-    private ResponseEntity<Object> whenSendMoney(AccountId sourceAccountId, AccountId targetAccountId) {
+    private ResponseEntity<SendMoneyReqDto> whenSendMoney(AccountId sourceAccountId,
+        AccountId targetAccountId) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-        HttpEntity<Void> request = new HttpEntity<>(null, headers);
+        headers.add("Custom-Header", "value");
 
-        return restTemplate.exchange(
-                "/accounts/send/{sourceAccountId}/{targetAccountId}/{amount}",
-                HttpMethod.POST,
-                request,
-                Object.class,
-                sourceAccountId.getValue(),
-                targetAccountId.getValue(),
-                Money.of(500L).getAmount());
+        SendMoneyReqDto reqDto = new SendMoneyReqDto(
+            sourceAccountId().getValue(),
+            targetAccountId().getValue(),
+            Money.of(500L).getAmount().longValue());
+        HttpEntity<SendMoneyReqDto> reqEntity = new HttpEntity<>(reqDto, headers);
+
+        return restTemplate.exchange("/accounts/send", HttpMethod.POST,
+            reqEntity, SendMoneyReqDto.class);
     }
 
     private Account getLoadAccount(AccountId accountId) {
@@ -87,12 +93,6 @@ public class SendMoneySystemTest {
         log.info("loadedAccount: {}", loadedAccount);
         return loadedAccount;
     }
-
-    private static AccountId targetAccountId() {
-        return new AccountId(2L);
-    }
-
-    private static AccountId sourceAccountId() {
-        return new AccountId(1L);
-    }
+    private static AccountId sourceAccountId() { return new AccountId(1L); }
+    private static AccountId targetAccountId() { return new AccountId(2L); }
 }
