@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 plugins {
@@ -68,10 +69,9 @@ hibernate {
         enableAssociationManagement = true
     }
 }
+
 tasks.withType<JavaCompile> {
-    // tasks.named("compileJava") 과 다름에 유의
     options.compilerArgs.add("-Xlint:deprecation")
-//    options.compilerArgs.add("-Xlint:unchecked")
     options.encoding = "UTF-8"
 }
 
@@ -87,4 +87,29 @@ tasks.named<Test>("test") {
 }
 tasks.named("processTestAot").configure {
     enabled = false
+}
+
+//  kotlin
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "21"
+        languageVersion = "1.9"
+        apiVersion = "1.9"
+    }
+}
+
+// null safety strict
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-opt-in=kotlin.RequiresOptIn")
+        allWarningsAsErrors = true
+    }
+}
+
+// 특정 어노테이션에 대해 자동으로 open 키워드 추가
+allOpen {
+    annotation("jakarta.persistence.Entity") // 엔티티는 프록시로 대체될 수 있어야 함
+    annotation("jakarta.persistence.MappedSuperclass") //공통 부모, 상속 가능해야
+    annotation("jakarta.persistence.Embeddable") // 값 타입
 }
