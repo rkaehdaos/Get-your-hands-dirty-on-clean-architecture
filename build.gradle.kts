@@ -63,6 +63,10 @@ dependencies {
     // Lombok과 MapStruct 통합
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+
+    // kotlin
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
 }
 hibernate {
     enhancement {
