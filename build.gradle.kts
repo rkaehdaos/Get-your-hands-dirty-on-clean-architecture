@@ -29,6 +29,7 @@ repositories {
     mavenCentral()
     maven { url = uri("https://repo.spring.io/milestone") }
     gradlePluginPortal()
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -66,6 +67,8 @@ dependencies {
 
     // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.github.consoleau:kassava:2.1.0") // com.github.{사용자 이름}:{repository name}:{tag}
+
 
 }
 hibernate {
