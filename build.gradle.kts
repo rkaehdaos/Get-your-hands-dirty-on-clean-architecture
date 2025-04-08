@@ -96,6 +96,7 @@ tasks.named("processTestAot").configure {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "21"
+        languageVersion = "1.9"
     }
 }
 
