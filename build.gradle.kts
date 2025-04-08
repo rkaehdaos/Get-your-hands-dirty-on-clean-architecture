@@ -71,9 +71,7 @@ hibernate {
 }
 
 tasks.withType<JavaCompile> {
-    // tasks.named("compileJava") 과 다름에 유의
     options.compilerArgs.add("-Xlint:deprecation")
-//    options.compilerArgs.add("-Xlint:unchecked")
     options.encoding = "UTF-8"
 }
 
