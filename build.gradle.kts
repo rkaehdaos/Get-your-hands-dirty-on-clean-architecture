@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 plugins {
@@ -92,8 +93,18 @@ tasks.named("processTestAot").configure {
 
 //  kotlin
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+}
+
 // null safety strict
-kotlin { compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict")}}
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
+}
 
 // 특정 어노테이션에 대해 자동으로 open 키워드 추가
 allOpen {
