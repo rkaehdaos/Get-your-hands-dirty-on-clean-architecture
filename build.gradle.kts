@@ -68,6 +68,10 @@ hibernate {
         enableAssociationManagement = true
     }
 }
+
+// null safety strict
+kotlin { compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict")}}
+
 tasks.withType<JavaCompile> {
     // tasks.named("compileJava") 과 다름에 유의
     options.compilerArgs.add("-Xlint:deprecation")
