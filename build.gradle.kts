@@ -103,6 +103,7 @@ tasks.withType<KotlinCompile> {
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-opt-in=kotlin.RequiresOptIn")
+        allWarningsAsErrors = true
     }
 }
 
