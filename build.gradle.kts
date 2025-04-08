@@ -95,6 +95,7 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "21"
         languageVersion = "1.9"
+        apiVersion = "1.9"
     }
 }
 
