@@ -56,7 +56,7 @@ class LongestLegOverTests {
     private fun leg(description: String, duration: Duration): Leg {
         val start = ZonedDateTime.ofInstant(
             Instant.ofEpochSecond(ThreadLocalRandom.current().nextInt().toLong()),
-            ZoneId.of("UTC"));
-        return Leg(description, start, start.plus(duration));
+            ZoneId.of("UTC"))
+        return Leg(description, start, start.plus(duration))
     }
 }
