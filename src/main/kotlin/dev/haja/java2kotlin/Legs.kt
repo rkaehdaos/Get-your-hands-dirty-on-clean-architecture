@@ -2,11 +2,10 @@ package dev.haja.java2kotlin
 
 import java.time.Duration
 
-fun longestLegOver(
-    legs: List<Leg>,
+fun List<Leg>.longestLegOver(
     duration: Duration
 ): Leg? {
-    val longestLeg = legs.maxByOrNull(Leg::plannedDuration)
+    val longestLeg = maxByOrNull(Leg::plannedDuration)
     return when {
         longestLeg == null -> null
         longestLeg.plannedDuration > duration -> longestLeg

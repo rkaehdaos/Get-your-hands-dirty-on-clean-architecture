@@ -20,19 +20,19 @@ class LongestLegOverTestsKotlin {
 
     @Test
     fun `is_absent_when_no_legs`() {
-        assertNull(longestLegOver(emptyList(), Duration.ZERO))
+        assertNull(emptyList<Leg>().longestLegOver(Duration.ZERO))
     }
 
     @Test
     fun `is_absent_when_no_legs_long_enough`() {
-        assertNull(longestLegOver(legs, oneDay))
+        assertNull(legs.longestLegOver(oneDay))
     }
 
     @Test
     fun `is_longest_leg_when_one_match`() {
         assertEquals(
             "one day",
-            longestLegOver(legs, oneDay.minusMillis(1))
+            legs.longestLegOver(oneDay.minusMillis(1))
             !!.description
         )
     }
@@ -41,7 +41,7 @@ class LongestLegOverTestsKotlin {
     fun `is_longest_leg_when_more_than_one_match`() {
         assertEquals(
             "one day",
-            longestLegOver(legs, Duration.ofMinutes(59))
+            legs.longestLegOver(Duration.ofMinutes(59))
             ?.description
         )
     }
