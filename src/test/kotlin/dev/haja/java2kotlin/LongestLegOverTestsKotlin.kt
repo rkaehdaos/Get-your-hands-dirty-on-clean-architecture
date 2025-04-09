@@ -11,7 +11,7 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 
-class LongestLegOverTests {
+class LongestLegOverTestsKotlin {
     private val legs = listOf(
         leg("one hour", Duration.ofHours(1)),
         leg("one day", Duration.ofDays(1)),
