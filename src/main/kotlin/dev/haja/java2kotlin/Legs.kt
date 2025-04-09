@@ -9,8 +9,7 @@ object Legs {
         legs: List<Leg>,
         duration: Duration
     ): Optional<Leg> {
-        var result: Leg? = longestLegOver(legs, duration)
-        return Optional.ofNullable(result)
+        return Optional.ofNullable(longestLegOver(legs, duration))
     }
 
     fun longestLegOver(
