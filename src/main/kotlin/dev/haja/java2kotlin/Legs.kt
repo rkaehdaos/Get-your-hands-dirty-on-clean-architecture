@@ -18,6 +18,5 @@ import java.time.Duration
         return result
     }
 
-    private fun isLongerThan(leg: Leg, duration: Duration): Boolean {
-        return leg.plannedDuration.compareTo(duration) > 0
-    }
+private fun isLongerThan(leg: Leg, duration: Duration) =
+    leg.plannedDuration.compareTo(duration) > 0
