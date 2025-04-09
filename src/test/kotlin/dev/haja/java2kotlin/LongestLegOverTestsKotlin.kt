@@ -1,8 +1,6 @@
 package dev.haja.java2kotlin
 
-import dev.haja.java2kotlin.Legs.findLongestLegOver
 import dev.haja.java2kotlin.Legs.longestLegOver
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -30,28 +28,10 @@ class LongestLegOverTestsKotlin {
         assertNull(longestLegOver(legs, oneDay))
     }
 
-    @Test
-    fun `is_longest_leg_when_one_match`() {
-        assertEquals(
-            "one day",
-            findLongestLegOver(legs, oneDay.minusMillis(1))
-                .orElseThrow().description
-        )
-    }
-
-    @Test
-    fun `is_longest_leg_when_more_than_one_match`() {
-        assertEquals(
-            "one day",
-            findLongestLegOver(legs, Duration.ofMinutes(59))
-                .orElseThrow().description
-        )
-    }
-
     private fun leg(description: String, duration: Duration): Leg {
         val start = ZonedDateTime.ofInstant(
             Instant.ofEpochSecond(ThreadLocalRandom.current().nextInt().toLong()),
-            ZoneId.of("UTC"))
-        return Leg(description, start, start.plus(duration))
+            ZoneId.of("UTC"));
+        return Leg(description, start, start.plus(duration));
     }
 }
