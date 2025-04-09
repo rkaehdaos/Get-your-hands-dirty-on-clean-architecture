@@ -2,7 +2,7 @@ package dev.haja.java2kotlin
 
 import java.time.Duration
 
-object Legs {
+
     fun longestLegOver(
         legs: List<Leg>,
         duration: Duration
@@ -21,4 +21,3 @@ object Legs {
     private fun isLongerThan(leg: Leg, duration: Duration): Boolean {
         return leg.plannedDuration.compareTo(duration) > 0
     }
-}

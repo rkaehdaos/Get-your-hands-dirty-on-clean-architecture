@@ -1,6 +1,5 @@
 package dev.haja.java2kotlin
 
-import dev.haja.java2kotlin.Legs.longestLegOver
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
