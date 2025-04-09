@@ -1,13 +1,14 @@
 package dev.haja.java2kotlin
 
 import dev.haja.java2kotlin.Legs.findLongestLegOver
+import dev.haja.java2kotlin.Legs.longestLegOver
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 
@@ -21,18 +22,12 @@ class LongestLegOverTestsKotlin {
 
     @Test
     fun is_absent_when_no_legs() {
-        assertEquals(
-            Optional.empty<Any>(),
-            findLongestLegOver(emptyList(), Duration.ZERO)
-        )
+        assertNull(longestLegOver(emptyList(), Duration.ZERO))
     }
 
     @Test
     fun is_absent_when_no_legs_long_enough() {
-        assertEquals(
-            Optional.empty<Any>(),
-            findLongestLegOver(legs, oneDay)
-        )
+        assertNull(longestLegOver(legs, oneDay))
     }
 
     @Test
