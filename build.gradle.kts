@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -103,10 +105,10 @@ tasks.named("processTestAot").configure {
 //  kotlin
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "21"
-        languageVersion = "1.9"
-        apiVersion = "1.9"
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        languageVersion.set(KotlinVersion.KOTLIN_1_9)
+        apiVersion.set(KotlinVersion.KOTLIN_1_9)
     }
 }
 
