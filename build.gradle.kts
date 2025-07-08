@@ -107,8 +107,8 @@ tasks.named("processTestAot").configure {
 tasks.withType<KotlinCompile> {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
-        languageVersion.set(KotlinVersion.KOTLIN_1_9)
-        apiVersion.set(KotlinVersion.KOTLIN_1_9)
+        languageVersion.set(KotlinVersion.KOTLIN_2_1)
+        apiVersion.set(KotlinVersion.KOTLIN_2_1)
     }
 }
 
