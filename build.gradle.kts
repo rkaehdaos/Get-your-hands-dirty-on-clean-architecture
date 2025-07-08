@@ -5,7 +5,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.4.5"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "6.6.13.Final"
+    id("org.hibernate.orm") version "6.6.18.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
