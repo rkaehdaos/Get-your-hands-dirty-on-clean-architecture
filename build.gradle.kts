@@ -1,4 +1,4 @@
-//import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
@@ -18,8 +18,8 @@ var releaseVer = "v0.0.1"
 version = "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(24) }
-    sourceCompatibility = JavaVersion.VERSION_24
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -106,7 +106,7 @@ tasks.named("processTestAot").configure {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-//        jvmTarget.set(JvmTarget.JVM_23)
+        jvmTarget.set(JvmTarget.JVM_21)
         languageVersion.set(KotlinVersion.KOTLIN_2_1)
         apiVersion.set(KotlinVersion.KOTLIN_2_1)
     }
