@@ -1,15 +1,17 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 plugins {
     java
-    id("org.springframework.boot") version "3.4.5"
+    id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "6.6.13.Final"
+    id("org.hibernate.orm") version "6.6.18.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    kotlin("plugin.jpa") version "1.9.25"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.spring") version "2.1.21"
+    kotlin("plugin.jpa") version "2.1.21"
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
@@ -43,7 +45,7 @@ dependencies {
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.4.1")
 
     // h2database
     runtimeOnly("com.h2database:h2")
@@ -56,10 +58,10 @@ dependencies {
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.36")
-    testCompileOnly("org.projectlombok:lombok:1.18.36")
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    testCompileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 
     // Lombok과 MapStruct 통합
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
@@ -103,10 +105,10 @@ tasks.named("processTestAot").configure {
 //  kotlin
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "21"
-        languageVersion = "1.9"
-        apiVersion = "1.9"
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        languageVersion.set(KotlinVersion.KOTLIN_2_1)
+        apiVersion.set(KotlinVersion.KOTLIN_2_1)
     }
 }
 
