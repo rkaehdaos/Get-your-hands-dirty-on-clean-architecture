@@ -3,7 +3,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 plugins {
     java
-    id("org.springframework.boot") version "3.4.5"
+    id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "6.6.18.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
