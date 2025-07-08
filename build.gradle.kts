@@ -58,10 +58,10 @@ dependencies {
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.36")
-    testCompileOnly("org.projectlombok:lombok:1.18.36")
-    annotationProcessor("org.projectlombok:lombok:1.18.36")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    testCompileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 
     // Lombok과 MapStruct 통합
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
