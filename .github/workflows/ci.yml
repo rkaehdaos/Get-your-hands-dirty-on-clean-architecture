@@ -34,7 +34,7 @@ jobs:
         run: |
           echo $ {{github.event.pull_request.state }}
           echo $ {{github.event.pull_request.opened }}
-          gradle build --no-daemon --stacktrace --parallel
+          gradle build --stacktrace --parallel
 
       - name: "Zip build reports"
         if: failure()
