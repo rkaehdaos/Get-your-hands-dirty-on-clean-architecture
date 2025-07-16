@@ -9,9 +9,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "6.6.18.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
-    kotlin("jvm") version "2.1.21"
-    kotlin("plugin.spring") version "2.1.21"
-    kotlin("plugin.jpa") version "2.1.21"
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.spring") version "2.2.0"
+    kotlin("plugin.jpa") version "2.2.0"
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
