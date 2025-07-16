@@ -23,9 +23,10 @@ import static org.assertj.core.api.BDDAssertions.then;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SendMoneySystemTest {
 
-    @Autowired
+    @Autowired 
     private TestRestTemplate restTemplate;
-    @Autowired
+    
+    @Autowired 
     private LoadAccountPort loadAccountPort;
 
     @Test
