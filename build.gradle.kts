@@ -18,8 +18,8 @@ var releaseVer = "v0.0.1"
 version = "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(21) }
-    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain { languageVersion = JavaLanguageVersion.of(24) }
+    sourceCompatibility = JavaVersion.VERSION_24
 }
 
 configurations {
@@ -106,7 +106,7 @@ tasks.named("processTestAot").configure {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_24)
         languageVersion.set(KotlinVersion.KOTLIN_2_1)
         apiVersion.set(KotlinVersion.KOTLIN_2_1)
     }
