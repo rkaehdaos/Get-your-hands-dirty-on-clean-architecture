@@ -84,6 +84,7 @@ class SendMoneyControllerTest {
     @Test
     void testSendMoneyValidationFailure_NegativeAmount() throws Exception {
         // given
+        @SuppressWarnings("ConstantConditions") // 의도적으로 음수 값을 사용하여 유효성 검사 실패를 테스트
         SendMoneyReqDto requestDto = new SendMoneyReqDto(1L, 2L, -500L);
         
         // when & then
