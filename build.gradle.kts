@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 plugins {
     java
     id("org.springframework.boot") version "3.5.3"
@@ -15,7 +16,8 @@ plugins {
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
-version = "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
+version =
+    "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(24) }
@@ -73,8 +75,6 @@ dependencies {
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-
-
 
 }
 hibernate {
