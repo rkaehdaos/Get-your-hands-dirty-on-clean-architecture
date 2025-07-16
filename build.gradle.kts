@@ -85,6 +85,7 @@ hibernate {
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:unchecked")
+    options.compilerArgs.add("-Xlint:-unchecked") // AOT 생성 코드의 unchecked 경고 무시
     options.encoding = "UTF-8"
 }
 
