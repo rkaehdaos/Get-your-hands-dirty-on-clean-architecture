@@ -13,8 +13,8 @@ import dev.haja.buckpal.account.domain.Money;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.mockito.BDDMockito.willReturn;
@@ -27,7 +27,7 @@ class SendMoneyControllerTest {
     
     @Autowired private ObjectMapper objectMapper;
     
-    @MockBean private SendMoneyUseCase sendMoneyUseCase;
+    @MockitoBean private SendMoneyUseCase sendMoneyUseCase;
 
     @Test
     void testSendMoney() throws Exception {
@@ -84,6 +84,7 @@ class SendMoneyControllerTest {
     @Test
     void testSendMoneyValidationFailure_NegativeAmount() throws Exception {
         // given
+        @SuppressWarnings("ConstantConditions") // 의도적으로 음수 값을 사용하여 유효성 검사 실패를 테스트
         SendMoneyReqDto requestDto = new SendMoneyReqDto(1L, 2L, -500L);
         
         // when & then

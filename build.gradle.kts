@@ -3,23 +3,25 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 plugins {
     java
     id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "6.6.18.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
-    kotlin("jvm") version "2.1.21"
-    kotlin("plugin.spring") version "2.1.21"
-    kotlin("plugin.jpa") version "2.1.21"
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.spring") version "2.2.0"
+    kotlin("plugin.jpa") version "2.2.0"
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
-version = "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
+version =
+    "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(21) }
-    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain { languageVersion = JavaLanguageVersion.of(24) }
+    sourceCompatibility = JavaVersion.VERSION_24
 }
 
 configurations {
@@ -58,10 +60,10 @@ dependencies {
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.38")
-    testCompileOnly("org.projectlombok:lombok:1.18.38")
-    annotationProcessor("org.projectlombok:lombok:1.18.38")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+    compileOnly("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 
     // Lombok과 MapStruct 통합
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
@@ -74,8 +76,6 @@ dependencies {
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-
-
 }
 hibernate {
     enhancement {
@@ -84,7 +84,8 @@ hibernate {
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Xlint:deprecation")
+    options.compilerArgs.add("-Xlint:unchecked")
+    options.compilerArgs.add("-Xlint:-unchecked") // AOT 생성 코드의 unchecked 경고 무시
     options.encoding = "UTF-8"
 }
 
@@ -106,9 +107,9 @@ tasks.named("processTestAot").configure {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-        languageVersion.set(KotlinVersion.KOTLIN_2_1)
-        apiVersion.set(KotlinVersion.KOTLIN_2_1)
+        jvmTarget.set(JvmTarget.JVM_24)
+        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+        apiVersion.set(KotlinVersion.KOTLIN_2_2)
     }
 }
 
