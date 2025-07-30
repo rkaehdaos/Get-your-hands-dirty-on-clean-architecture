@@ -10,6 +10,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "6.6.22.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
+    id("io.freefair.lombok") version "8.13.1"
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.spring") version "2.2.0"
     kotlin("plugin.jpa") version "2.2.0"
