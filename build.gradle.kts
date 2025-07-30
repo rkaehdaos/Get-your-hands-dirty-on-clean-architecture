@@ -13,6 +13,7 @@ plugins {
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.spring") version "2.2.0"
     kotlin("plugin.jpa") version "2.2.0"
+    kotlin("plugin.lombok") version "2.2.0"
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
@@ -120,5 +121,3 @@ kotlin {
         allWarningsAsErrors = true
     }
 }
-
-
