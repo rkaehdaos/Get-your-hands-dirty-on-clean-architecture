@@ -121,9 +121,4 @@ kotlin {
     }
 }
 
-// 특정 어노테이션에 대해 자동으로 open 키워드 추가
-allOpen {
-    annotation("jakarta.persistence.Entity") // 엔티티는 프록시로 대체될 수 있어야 함
-    annotation("jakarta.persistence.MappedSuperclass") //공통 부모, 상속 가능해야
-    annotation("jakarta.persistence.Embeddable") // 값 타입
-}
+
