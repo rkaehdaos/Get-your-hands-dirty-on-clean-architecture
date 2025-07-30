@@ -84,9 +84,19 @@ hibernate {
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Xlint:unchecked")
-    options.compilerArgs.add("-Xlint:-unchecked") // AOT 생성 코드의 unchecked 경고 무시
     options.encoding = "UTF-8"
+}
+
+// 일반 Java 컴파일에서는 경고 활성화
+tasks.named("compileJava", JavaCompile::class) {
+    options.compilerArgs.add("-Xlint:unchecked")
+}
+
+// AOT 컴파일 태스크에서는 생성된 코드의 경고 완전 제거
+tasks.named("compileAotJava", JavaCompile::class) {
+    options.compilerArgs.addAll(listOf(
+        "-Xlint:none"  // 모든 경고 완전 제거
+    ))
 }
 
 tasks.withType<Test> {
