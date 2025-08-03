@@ -1,0 +1,14 @@
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        # system out 출력
+        show_sql: false
+        format_sql: true
+        use_sql_comments: true
+# 로거로 찍기
+logging.level:
+  org.hibernate.SQL: debug
+  # 쿼리 파라미터 찍기
+  org.hibernate.type: trace
