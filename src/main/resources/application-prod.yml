@@ -6,3 +6,6 @@
         show_sql: false
         format_sql: false
         use_sql_comments: false
+logging.level:
+  org.hibernate.SQL: warn
+  org.hibernate.type: off
