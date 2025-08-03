@@ -1,127 +1,87 @@
 # CLAUDE.md
 
-이 파일은 이 저장소에서 코드를 작업할 때 Claude Code(claude.ai/code)에 대한 지침을 제공합니다.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Build and Development Commands
+## Project Overview
 
-이것은 Gradle과 Kotlin DSL을 사용한 Spring Boot 애플리케이션입니다.
+This is a toy project demonstrating **Hexagonal Architecture** (Ports & Adapters) and **Clean Code** principles using Spring Boot, Java 24, and Kotlin. The project implements a simple money transfer system ("BuckPal") showcasing proper domain-driven design and architectural boundaries.
 
-### Build Commands
-- `./gradlew build` - Build the entire project
-- `./gradlew assemble` - Build without running tests
-- `./gradlew clean` - Clean build artifacts
-- `./gradlew bootJar` - Create executable JAR
+## Common Commands
 
-### Running the Application
-- `./gradlew bootRun` - Run the Spring Boot application
-- `./gradlew bootTestRun` - Run using test runtime classpath
+### Build & Test
+```bash
+# Full build with tests
+./gradlew build
 
-### Testing
-- `./gradlew test` - Run all tests (uses JUnit 5 Platform)
-- `./gradlew nativeTest` - Run tests as native binary
-- Tests run in parallel using all available processors
-- Architecture tests validate hexagonal architecture compliance using ArchUnit
+# Run tests only
+./gradlew test
 
-## Architecture Overview
+# Run a specific test class
+./gradlew test --tests "SendMoneyServiceTest"
 
-This project implements **Hexagonal Architecture** (Clean Architecture) for a banking application called "BuckPal". The architecture enforces strict separation of concerns with the following layers:
+# Run tests with detailed output
+./gradlew test --info
 
-### Core Structure
-```
-src/main/java/dev/haja/buckpal/
-├── account/                    # Main business domain
-│   ├── domain/                # Domain entities and business logic
-│   │   ├── Account.java       # Core account entity with business rules
-│   │   ├── Activity.java      # Account activity/transaction entity
-│   │   ├── ActivityWindow.java # Collection of activities
-│   │   └── Money.java         # Value object for monetary amounts
-│   ├── application/           # Application services and ports
-│   │   ├── port/
-│   │   │   ├── in/           # Inbound ports (use cases)
-│   │   │   └── out/          # Outbound ports (repositories)
-│   │   └── service/          # Application services implementing use cases
-│   └── adapter/              # External adapters
-│       ├── in/web/          # Web controllers (REST APIs)
-│       └── out/persistence/ # Database persistence adapters
-└── common/                   # Shared infrastructure annotations
+# Clean build
+./gradlew clean build
 ```
 
-### Architectural Rules (Enforced by Tests)
-- **Domain Layer**: Contains pure business logic, no dependencies on other layers
-- **Application Layer**: Orchestrates business flows, depends only on domain
-- **Adapter Layer**: Handles external communication (web, database)
-- Ports define contracts between layers
-- Dependency direction: Adapters → Application → Domain
+### Development
+```bash
+# Run application locally
+./gradlew bootRun
 
-### Key Design Patterns
-- **Ports and Adapters**: Clear interface contracts between layers  
-- **Factory Methods**: Domain entities use static factory methods (e.g., `Account.withId()`, `Account.withoutId()`)
-- **Value Objects**: `Money`, `AccountId` are immutable value objects
-- **Command Pattern**: Operations like `SendMoneyCommand` encapsulate requests
-- **Repository Pattern**: Data access through port interfaces
+# Check for dependency updates
+./gradlew dependencyUpdates
+```
+
+## Architecture Structure
+
+### Hexagonal Architecture Layers
+
+**Domain Layer** (`account/domain/`):
+- Pure business logic with no external dependencies
+- `Account`: Aggregate root with business rules (withdraw/deposit validation)
+- `Money`: Value object for monetary calculations
+- `Activity`: Entity representing money transfer activities
+- `ActivityWindow`: Collection wrapper managing activity periods
+
+**Application Layer** (`account/application/`):
+- **Ports** (`port/in/`, `port/out/`): Interface definitions for inbound/outbound operations
+- **Services** (`service/`): Use case implementations that orchestrate domain objects
+- `SendMoneyService`: Main business process orchestration with transaction management
+
+**Adapter Layer** (`account/adapter/`):
+- **Inbound** (`in/web/`): REST controllers converting HTTP requests to domain commands
+- **Outbound** (`out/persistence/`): JPA adapters implementing persistence ports
+- `AccountPersistenceAdapter`: Implements both `LoadAccountPort` and `UpdateAccountStatePort`
+
+### Key Architectural Patterns
+
+1. **Dependency Inversion**: Application layer depends on port interfaces, not concrete adapters
+2. **Command Pattern**: `SendMoneyCommand` encapsulates transfer requests
+3. **Factory Methods**: Domain entities use static factory methods (`Account.withId()`, `Account.withoutId()`)
+4. **Mapper Pattern**: `AccountMapper` handles domain ↔ JPA entity conversion
+
+## Architecture Validation
+
+The project uses **ArchUnit** to enforce architectural rules:
+- `DependencyRuleTests`: Validates layer dependencies
+- `HexagonalArchitecture`: Custom DSL for hexagonal architecture validation
+- Run with: `./gradlew test --tests "*DependencyRuleTests*"`
 
 ## Technology Stack
 
-### Core Technologies
-- **Java 24** with **Kotlin 2.2** (mixed language project)
-- **Spring Boot 3.5.4** (Web, JPA, Validation, Actuator)
-- **Spring Data JPA** with Hibernate 6.6.22.Final
-- **H2 Database** (runtime and testing)
+- **Java 24** with **Kotlin 2.2** support
+- **Spring Boot 3.5** with JPA/Hibernate
+- **H2 Database** for development/testing
+- **MapStruct** for mapping between layers
+- **Lombok** for boilerplate reduction
+- **ArchUnit** for architecture testing
 
-### Development Tools
-- **Lombok** - Reduces boilerplate code with Kotlin plugin support
-- **MapStruct 1.6.3** - Type-safe bean mapping
-- **Lombok-MapStruct binding** - Integration between Lombok and MapStruct
-- **Kassava 2.1.0** - Kotlin data class utilities
-- **ArchUnit 1.4.1** - Architecture testing framework
-- **GraalVM Native Image** support
+## Development Notes
 
-### Code Quality
-- **Kotlin strict null safety** enabled (`-Xjsr305=strict`)
-- **All warnings as errors** in Kotlin compilation
-- **ArchUnit tests** enforce architectural boundaries
-- **JPA entities** automatically opened for proxy creation
-
-## Project Configuration
-
-### Database
-- Development: H2 in-memory database
-- JPA DDL: `create-drop` (recreates schema on startup)
-- Hibernate SQL logging enabled in debug mode
-
-### Application Profiles
-- Default active profile: `local`
-- Application name: "Get-your-hands-dirty-on-clean-architecture"
-
-## Testing Strategy
-
-### Test Structure
-- **Unit Tests**: Test individual components in isolation
-- **Integration Tests**: Test adapter integrations (e.g., `AccountPersistenceAdapterTest`)
-- **System Tests**: End-to-end testing (`SendMoneySystemTest`) 
-- **Architecture Tests**: Validate hexagonal architecture rules (`DependencyRuleTests`)
-
-### Key Test Classes
-- Architecture compliance verified in `DependencyRuleTests.java:24`
-- System-level money transfer tested in `SendMoneySystemTest`
-- Domain logic tested in `AccountTest`, `ActivityWindowTest`
-
-## Important Implementation Notes
-
-### Domain Model
-- `Account` entities track balance through baseline + activity window calculation
-- Business rules (e.g., withdrawal limits) are enforced in domain entities
-- Money transfers require locking both source and target accounts
-- All monetary operations use the `Money` value object for type safety
-
-### Persistence Strategy  
-- JPA entities (`AccountJpaEntity`, `ActivityJpaEntity`) separate from domain entities
-- `AccountMapper` handles conversion between JPA and domain entities
-- Account locking mechanism (`AccountLock`) prevents concurrent modification
-
-### Error Handling
-- `ThresholdExceededException` for transfer limit violations
-- Domain validation through `SelfValidating` base class
-- Proper error messages with account descriptions
-
-The codebase demonstrates clean architecture principles with clear separation between business logic, application orchestration, and infrastructure concerns.
+- Uses **strict null safety** in Kotlin (`allWarningsAsErrors = true`)
+- **Parallel test execution** enabled for faster feedback
+- **AOT compilation** configured for GraalVM native image support
+- Database schema recreated on each run (`ddl-auto: create-drop`)
