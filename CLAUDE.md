@@ -85,3 +85,14 @@ The project uses **ArchUnit** to enforce architectural rules:
 - **Parallel test execution** enabled for faster feedback
 - **AOT compilation** configured for GraalVM native image support
 - Database schema recreated on each run (`ddl-auto: create-drop`)
+
+## Test Code Standards
+
+When creating new test code:
+- Each test method MUST include JavaDoc annotations
+- JavaDoc MUST include `@author Kai Ahn` tag
+- Follow existing test patterns and naming conventions
+
+## AI Interaction Guidelines
+
+- 나에게 답변할때는 반드시 한국말로 답변할 것
