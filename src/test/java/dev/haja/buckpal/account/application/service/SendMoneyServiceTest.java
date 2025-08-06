@@ -146,8 +146,80 @@ class SendMoneyServiceTest {
     }
 
     private BuckPalConfigurationProperties buckPalConfigurationProperties() {
-        BuckPalConfigurationProperties properties = new BuckPalConfigurationProperties();
-        properties.getAccount().setHistoryLookbackDays(10);
-        return properties;
+        return new BuckPalConfigurationProperties(
+                Long.MAX_VALUE,
+                new BuckPalConfigurationProperties.Account(10)
+        );
+    }
+
+    private BuckPalConfigurationProperties createInvalidBuckPalConfiguration(int invalidDays) {
+        return new BuckPalConfigurationProperties(
+                Long.MAX_VALUE,
+                new BuckPalConfigurationProperties.Account(invalidDays)
+        );
+    }
+
+    private BuckPalConfigurationProperties createBuckPalConfigurationWithCustomDays(int days) {
+        return new BuckPalConfigurationProperties(
+                Long.MAX_VALUE,
+                new BuckPalConfigurationProperties.Account(days)
+        );
+    }
+
+    @Test
+    @DisplayName("historyLookbackDays가 0 이하일 때 IllegalArgumentException 발생")
+    void givenInvalidHistoryLookbackDays_thenThrowsIllegalArgumentException() {
+        // given
+        SendMoneyService serviceWithInvalidConfig = new SendMoneyService(
+                loadAccountPort,
+                accountLock,
+                updateAccountStatePort,
+                moneyTransferProperties(),
+                createInvalidBuckPalConfiguration(-1));
+
+        SendMoneyCommand command = new SendMoneyCommand(
+                new AccountId(1L),
+                new AccountId(2L),
+                Money.of(100L));
+
+        // when & then
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> serviceWithInvalidConfig.sendMoney(command))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("historyLookbackDays must be positive");
+    }
+
+    @Test
+    @DisplayName("historyLookbackDays가 기본값이 아닌 경우에도 정상 작동")
+    void givenCustomHistoryLookbackDays_thenTransactionSucceeds() {
+        // given
+        SendMoneyService serviceWithCustomConfig = new SendMoneyService(
+                loadAccountPort,
+                accountLock,
+                updateAccountStatePort,
+                moneyTransferProperties(),
+                createBuckPalConfigurationWithCustomDays(5));
+
+        AccountId sourceAccountId = new AccountId(41L);
+        Account sourceAccount = givenAnAccountWithId(sourceAccountId);
+
+        AccountId targetAccountId = new AccountId(42L);
+        Account targetAccount = givenAnAccountWithId(targetAccountId);
+
+        givenWithdrawalWillSucceed(sourceAccount);
+        givenDepositWillSucceed(targetAccount);
+
+        Money money = Money.of(500L);
+
+        SendMoneyCommand command = new SendMoneyCommand(
+                sourceAccountId,
+                targetAccountId,
+                money);
+
+        // when
+        boolean success = serviceWithCustomConfig.sendMoney(command);
+
+        // then
+        assertThat(success).isTrue();
+        thenAccountsHaveBeenUpdated(sourceAccountId, targetAccountId);
     }
 }
