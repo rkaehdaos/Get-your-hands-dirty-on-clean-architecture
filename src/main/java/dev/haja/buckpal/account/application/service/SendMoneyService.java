@@ -24,11 +24,13 @@ public class SendMoneyService implements SendMoneyUseCase {
     private final UpdateAccountStatePort updateAccountStatePort;
     private final MoneyTransferProperties moneyTransferProperties;
 
+    private static final int ACCOUNT_HISTORY_LOOKBACK_DAYS = 10;
+
     @Override
     public boolean sendMoney(SendMoneyCommand command) {
         checkThreshold(command);
 
-        LocalDateTime baselineDate = LocalDateTime.now().minusDays(10);
+        LocalDateTime baselineDate = LocalDateTime.now().minusDays(ACCOUNT_HISTORY_LOOKBACK_DAYS);
         Account sourceAccount = loadAccount(command.getSourceAccountId(), baselineDate);
         Account targetAccount = loadAccount(command.getTargetAccountId(), baselineDate);
         AccountId sourceAccountId = getAccountId(sourceAccount, "source account");
