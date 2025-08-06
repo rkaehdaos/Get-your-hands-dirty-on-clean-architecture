@@ -30,7 +30,11 @@ public class SendMoneyService implements SendMoneyUseCase {
     public boolean sendMoney(SendMoneyCommand command) {
         checkThreshold(command);
 
-        LocalDateTime baselineDate = LocalDateTime.now().minusDays(buckPalConfigurationProperties.getAccount().getHistoryLookbackDays());
+        int historyLookbackDays = buckPalConfigurationProperties.getAccount().getHistoryLookbackDays();
+        if (historyLookbackDays <= 0) {
+            throw new IllegalArgumentException("historyLookbackDays must be positive, but was: " + historyLookbackDays);
+        }
+        LocalDateTime baselineDate = LocalDateTime.now().minusDays(historyLookbackDays);
         Account sourceAccount = loadAccount(command.getSourceAccountId(), baselineDate);
         Account targetAccount = loadAccount(command.getTargetAccountId(), baselineDate);
         AccountId sourceAccountId = getAccountId(sourceAccount, "source account");
