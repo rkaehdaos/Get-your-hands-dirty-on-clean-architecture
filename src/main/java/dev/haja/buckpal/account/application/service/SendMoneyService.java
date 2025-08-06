@@ -6,6 +6,7 @@ import dev.haja.buckpal.account.application.port.out.AccountLock;
 import dev.haja.buckpal.account.application.port.out.LoadAccountPort;
 import dev.haja.buckpal.account.application.port.out.UpdateAccountStatePort;
 import dev.haja.buckpal.account.domain.Account;
+import dev.haja.buckpal.BuckPalConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +24,13 @@ public class SendMoneyService implements SendMoneyUseCase {
     private final AccountLock accountLock;
     private final UpdateAccountStatePort updateAccountStatePort;
     private final MoneyTransferProperties moneyTransferProperties;
-
-    private static final int ACCOUNT_HISTORY_LOOKBACK_DAYS = 10;
+    private final BuckPalConfigurationProperties buckPalConfigurationProperties;
 
     @Override
     public boolean sendMoney(SendMoneyCommand command) {
         checkThreshold(command);
 
-        LocalDateTime baselineDate = LocalDateTime.now().minusDays(ACCOUNT_HISTORY_LOOKBACK_DAYS);
+        LocalDateTime baselineDate = LocalDateTime.now().minusDays(buckPalConfigurationProperties.getAccount().getHistoryLookbackDays());
         Account sourceAccount = loadAccount(command.getSourceAccountId(), baselineDate);
         Account targetAccount = loadAccount(command.getTargetAccountId(), baselineDate);
         AccountId sourceAccountId = getAccountId(sourceAccount, "source account");
@@ -43,10 +43,12 @@ public class SendMoneyService implements SendMoneyUseCase {
         SendMoneyCommand command,
         AccountId sourceAccountId, Account sourceAccount,
         AccountId targetAccountId, Account targetAccount) {
-        if (!withdrawFromSourceAccount(command, sourceAccountId, sourceAccount, targetAccountId))
+        if (!withdrawFromSourceAccount(command, sourceAccountId, sourceAccount, targetAccountId)) {
             return false;
-        if (!depositToTargetAccount(command, targetAccountId, targetAccount, sourceAccountId))
+        }
+        if (!depositToTargetAccount(command, targetAccountId, targetAccount, sourceAccountId)) {
             return false;
+        }
         updateAccountStates(sourceAccount, targetAccount);
         releaseLock(sourceAccountId, targetAccountId);
         return true;

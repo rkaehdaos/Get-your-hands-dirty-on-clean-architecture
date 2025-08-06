@@ -6,6 +6,7 @@ import dev.haja.buckpal.account.application.port.out.AccountLock;
 import dev.haja.buckpal.account.application.port.out.LoadAccountPort;
 import dev.haja.buckpal.account.application.port.out.UpdateAccountStatePort;
 import dev.haja.buckpal.account.domain.Account;
+import dev.haja.buckpal.BuckPalConfigurationProperties;
 import dev.haja.buckpal.account.domain.Account.AccountId;
 import dev.haja.buckpal.account.domain.Money;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,8 @@ class SendMoneyServiceTest {
             loadAccountPort,
             accountLock,
             updateAccountStatePort,
-            moneyTransferProperties());
+            moneyTransferProperties(),
+            buckPalConfigurationProperties());
 
     @Test
     @DisplayName("샘플 테스트")
@@ -141,5 +143,11 @@ class SendMoneyServiceTest {
 
     private MoneyTransferProperties moneyTransferProperties() {
         return new MoneyTransferProperties(Money.of(Long.MAX_VALUE));
+    }
+
+    private BuckPalConfigurationProperties buckPalConfigurationProperties() {
+        BuckPalConfigurationProperties properties = new BuckPalConfigurationProperties();
+        properties.getAccount().setHistoryLookbackDays(10);
+        return properties;
     }
 }

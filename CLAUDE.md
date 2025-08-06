@@ -202,6 +202,6 @@ value class AccountId(val value: Long)
 
 ## AI Interaction Guidelines
 
-- 나에게 답변할때는 반드시 한국말로 답변할 것
+- 나에게 답변할 때는 반드시 한국말로 답변할 것
 - 예시 코드를 추가할 때는 반드시 **Kotlin 코드**로 작성할 것
 - Java 코드보다 Kotlin 코드를 우선적으로 사용할 것
