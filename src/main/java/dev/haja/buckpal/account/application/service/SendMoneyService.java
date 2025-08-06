@@ -39,9 +39,14 @@ public class SendMoneyService implements SendMoneyUseCase {
         return executeMoneyTransfer(command, sourceAccountId, sourceAccount, targetAccountId, targetAccount);
     }
 
-    private boolean executeMoneyTransfer(SendMoneyCommand command, AccountId sourceAccountId, Account sourceAccount, AccountId targetAccountId, Account targetAccount) {
-        if (!withdrawFromSourceAccount(command, sourceAccountId, sourceAccount, targetAccountId)) return false;
-        if (!depositToTargetAccount(command, targetAccountId, targetAccount, sourceAccountId)) return false;
+    private boolean executeMoneyTransfer(
+        SendMoneyCommand command,
+        AccountId sourceAccountId, Account sourceAccount,
+        AccountId targetAccountId, Account targetAccount) {
+        if (!withdrawFromSourceAccount(command, sourceAccountId, sourceAccount, targetAccountId))
+            return false;
+        if (!depositToTargetAccount(command, targetAccountId, targetAccount, sourceAccountId))
+            return false;
         updateAccountStates(sourceAccount, targetAccount);
         releaseLock(sourceAccountId, targetAccountId);
         return true;
