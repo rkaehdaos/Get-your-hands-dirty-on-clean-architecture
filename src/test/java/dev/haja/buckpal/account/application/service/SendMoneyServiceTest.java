@@ -32,13 +32,14 @@ class SendMoneyServiceTest {
 
     private final LoadAccountPort loadAccountPort = Mockito.mock(LoadAccountPort.class);
     private final AccountLock accountLock = Mockito.mock(AccountLock.class);
-    private final UpdateAccountStatePort updateAccountStatePort = Mockito.mock(UpdateAccountStatePort.class);
+    private final UpdateAccountStatePort updateAccountStatePort = Mockito.mock(
+        UpdateAccountStatePort.class);
     private final SendMoneyService sendMoneyService = new SendMoneyService(
-            loadAccountPort,
-            accountLock,
-            updateAccountStatePort,
-            moneyTransferProperties(),
-            buckPalConfigurationProperties());
+        loadAccountPort,
+        accountLock,
+        updateAccountStatePort,
+        moneyTransferProperties(),
+        buckPalConfigurationProperties());
 
     @Test
     @DisplayName("샘플 테스트")
@@ -59,9 +60,12 @@ class SendMoneyServiceTest {
         givenWithdrawalWillFail(sourceAccount); // 출금 실패
         givenDepositWillSucceed(targetAccount);
 
-        SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(sourceAccount.getId().get(),
-                targetAccount.getId().get(),
-                Money.of(300L));
+        SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(
+            sourceAccount.getId().orElseThrow(
+                () -> new IllegalStateException("소스 계정 ID가 포함되어야 합니다.")),
+            targetAccount.getId().orElseThrow(
+                () -> new IllegalStateException("대상 계정 ID가 포함되어야 합니다.")),
+            Money.of(300L));
         boolean success = sendMoneyService.sendMoney(sendMoneyCommand);
         assertThat(success).isFalse();
 
@@ -72,7 +76,7 @@ class SendMoneyServiceTest {
 
     private void givenWithdrawalWillFail(Account account) {
         given(account.withdraw(any(Money.class), any(AccountId.class)))
-                .willReturn(false);
+            .willReturn(false);
     }
 
     @Test
@@ -89,9 +93,12 @@ class SendMoneyServiceTest {
         givenDepositWillSucceed(targetAccount);
 
         Money money = Money.of(500L);
-        SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(sourceAccount.getId().get(),
-                targetAccount.getId().get(),
-                money);
+        SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(
+            sourceAccount.getId().orElseThrow(
+                () -> new IllegalStateException("Source account ID should be present")),
+            targetAccount.getId().orElseThrow(
+                () -> new IllegalStateException("Target account ID should be present")),
+            money);
         boolean success = sendMoneyService.sendMoney(sendMoneyCommand);
         assertThat(success).isTrue();
 
@@ -109,13 +116,14 @@ class SendMoneyServiceTest {
     private void thenAccountsHaveBeenUpdated(AccountId... accountIds) {
         ArgumentCaptor<Account> accountCaptor = ArgumentCaptor.forClass(Account.class);
         then(updateAccountStatePort).should(times(accountIds.length))
-                .updateActivities(accountCaptor.capture());
+            .updateActivities(accountCaptor.capture());
 
         List<AccountId> updatedAccountIds = accountCaptor.getAllValues()
-                .stream()
-                .map(Account::getId)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+            .stream()
+            .map(Account::getId)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
 
         for (AccountId accountId : accountIds) {
             assertThat(updatedAccountIds).contains(accountId);
@@ -124,20 +132,20 @@ class SendMoneyServiceTest {
 
     private void givenDepositWillSucceed(Account targetAccount) {
         given(targetAccount.deposit(any(Money.class), any(AccountId.class)))
-                .willReturn(true);
+            .willReturn(true);
     }
 
     private void givenWithdrawalWillSucceed(Account sourceAccount) {
         given(sourceAccount.withdraw(any(Money.class), any(AccountId.class)))
-                .willReturn(true);
+            .willReturn(true);
     }
 
     private Account givenAnAccountWithId(AccountId accountId) {
         Account account = Mockito.mock(Account.class);
         given(account.getId())
-                .willReturn(Optional.of(accountId));
-        given(loadAccountPort.loadAccount(eq(account.getId().get()), any(LocalDateTime.class)))
-                .willReturn(account);
+            .willReturn(Optional.of(accountId));
+        given(loadAccountPort.loadAccount(eq(accountId), any(LocalDateTime.class)))
+            .willReturn(account);
         return account;
     }
 
@@ -147,22 +155,22 @@ class SendMoneyServiceTest {
 
     private BuckPalConfigurationProperties buckPalConfigurationProperties() {
         return new BuckPalConfigurationProperties(
-                Long.MAX_VALUE,
-                new BuckPalConfigurationProperties.Account(10)
+            Long.MAX_VALUE,
+            new BuckPalConfigurationProperties.Account(10)
         );
     }
 
     private BuckPalConfigurationProperties createInvalidBuckPalConfiguration(int invalidDays) {
         return new BuckPalConfigurationProperties(
-                Long.MAX_VALUE,
-                new BuckPalConfigurationProperties.Account(invalidDays)
+            Long.MAX_VALUE,
+            new BuckPalConfigurationProperties.Account(invalidDays)
         );
     }
 
     private BuckPalConfigurationProperties createBuckPalConfigurationWithCustomDays(int days) {
         return new BuckPalConfigurationProperties(
-                Long.MAX_VALUE,
-                new BuckPalConfigurationProperties.Account(days)
+            Long.MAX_VALUE,
+            new BuckPalConfigurationProperties.Account(days)
         );
     }
 
@@ -171,21 +179,22 @@ class SendMoneyServiceTest {
     void givenInvalidHistoryLookbackDays_thenThrowsIllegalArgumentException() {
         // given
         SendMoneyService serviceWithInvalidConfig = new SendMoneyService(
-                loadAccountPort,
-                accountLock,
-                updateAccountStatePort,
-                moneyTransferProperties(),
-                createInvalidBuckPalConfiguration(-1));
+            loadAccountPort,
+            accountLock,
+            updateAccountStatePort,
+            moneyTransferProperties(),
+            createInvalidBuckPalConfiguration(-1));
 
         SendMoneyCommand command = new SendMoneyCommand(
-                new AccountId(1L),
-                new AccountId(2L),
-                Money.of(100L));
+            new AccountId(1L),
+            new AccountId(2L),
+            Money.of(100L));
 
         // when & then
-        org.assertj.core.api.Assertions.assertThatThrownBy(() -> serviceWithInvalidConfig.sendMoney(command))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("historyLookbackDays must be positive");
+        org.assertj.core.api.Assertions.assertThatThrownBy(
+                () -> serviceWithInvalidConfig.sendMoney(command))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("historyLookbackDays must be positive");
     }
 
     @Test
@@ -193,11 +202,11 @@ class SendMoneyServiceTest {
     void givenCustomHistoryLookbackDays_thenTransactionSucceeds() {
         // given
         SendMoneyService serviceWithCustomConfig = new SendMoneyService(
-                loadAccountPort,
-                accountLock,
-                updateAccountStatePort,
-                moneyTransferProperties(),
-                createBuckPalConfigurationWithCustomDays(5));
+            loadAccountPort,
+            accountLock,
+            updateAccountStatePort,
+            moneyTransferProperties(),
+            createBuckPalConfigurationWithCustomDays(5));
 
         AccountId sourceAccountId = new AccountId(41L);
         Account sourceAccount = givenAnAccountWithId(sourceAccountId);
@@ -211,9 +220,9 @@ class SendMoneyServiceTest {
         Money money = Money.of(500L);
 
         SendMoneyCommand command = new SendMoneyCommand(
-                sourceAccountId,
-                targetAccountId,
-                money);
+            sourceAccountId,
+            targetAccountId,
+            money);
 
         // when
         boolean success = serviceWithCustomConfig.sendMoney(command);
