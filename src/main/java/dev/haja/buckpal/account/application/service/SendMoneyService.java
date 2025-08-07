@@ -6,6 +6,7 @@ import dev.haja.buckpal.account.application.port.out.AccountLock;
 import dev.haja.buckpal.account.application.port.out.LoadAccountPort;
 import dev.haja.buckpal.account.application.port.out.UpdateAccountStatePort;
 import dev.haja.buckpal.account.domain.Account;
+import dev.haja.buckpal.BuckPalConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +24,17 @@ public class SendMoneyService implements SendMoneyUseCase {
     private final AccountLock accountLock;
     private final UpdateAccountStatePort updateAccountStatePort;
     private final MoneyTransferProperties moneyTransferProperties;
+    private final BuckPalConfigurationProperties buckPalConfigurationProperties;
 
     @Override
     public boolean sendMoney(SendMoneyCommand command) {
         checkThreshold(command);
 
-        LocalDateTime baselineDate = LocalDateTime.now().minusDays(10);
+        int historyLookbackDays = buckPalConfigurationProperties.getAccount().getHistoryLookbackDays();
+        if (historyLookbackDays <= 0) {
+            throw new IllegalArgumentException("historyLookbackDays must be positive, but was: " + historyLookbackDays);
+        }
+        LocalDateTime baselineDate = LocalDateTime.now().minusDays(historyLookbackDays);
         Account sourceAccount = loadAccount(command.getSourceAccountId(), baselineDate);
         Account targetAccount = loadAccount(command.getTargetAccountId(), baselineDate);
         AccountId sourceAccountId = getAccountId(sourceAccount, "source account");
@@ -37,9 +43,16 @@ public class SendMoneyService implements SendMoneyUseCase {
         return executeMoneyTransfer(command, sourceAccountId, sourceAccount, targetAccountId, targetAccount);
     }
 
-    private boolean executeMoneyTransfer(SendMoneyCommand command, AccountId sourceAccountId, Account sourceAccount, AccountId targetAccountId, Account targetAccount) {
-        if (!withdrawFromSourceAccount(command, sourceAccountId, sourceAccount, targetAccountId)) return false;
-        if (!depositToTargetAccount(command, targetAccountId, targetAccount, sourceAccountId)) return false;
+    private boolean executeMoneyTransfer(
+        SendMoneyCommand command,
+        AccountId sourceAccountId, Account sourceAccount,
+        AccountId targetAccountId, Account targetAccount) {
+        if (!withdrawFromSourceAccount(command, sourceAccountId, sourceAccount, targetAccountId)) {
+            return false;
+        }
+        if (!depositToTargetAccount(command, targetAccountId, targetAccount, sourceAccountId)) {
+            return false;
+        }
         updateAccountStates(sourceAccount, targetAccount);
         releaseLock(sourceAccountId, targetAccountId);
         return true;

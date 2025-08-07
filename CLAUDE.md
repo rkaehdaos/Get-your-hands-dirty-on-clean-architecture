@@ -85,3 +85,9 @@ The project uses **ArchUnit** to enforce architectural rules:
 - **Parallel test execution** enabled for faster feedback
 - **AOT compilation** configured for GraalVM native image support
 - Database schema recreated on each run (`ddl-auto: create-drop`)
+
+## Documentation References
+
+- **Testing Standards**: See [docs/testing-standards.md](docs/testing-standards.md)
+- **Architecture Roadmap**: See [docs/architecture-roadmap.md](docs/architecture-roadmap.md)
+- **AI Interaction Guidelines**: See [docs/ai-interaction-guidelines.md](docs/ai-interaction-guidelines.md)
