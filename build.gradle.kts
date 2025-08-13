@@ -8,7 +8,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.5.4"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "6.6.22.Final"
+    id("org.hibernate.orm") version "6.6.22.Final" //TODO: gradle 9.0 지원 버전 나올시 처리할 것
     id("org.graalvm.buildtools.native") version "0.10.6"
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.spring") version "2.2.0"
@@ -75,6 +75,37 @@ dependencies {
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+// testcontainers
+/*
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:kafka")
+    testImplementation("org.testcontainers:jdbc")
+    testImplementation("org.testcontainers:mariadb")
+    testImplementation("org.testcontainers:mongodb")
+    testImplementation("org.testcontainers:mysql")
+    testImplementation("org.testcontainers:ollama")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:cassandra")
+    testImplementation("org.testcontainers:selenium")
+    testImplementation("org.testcontainers:vault")
+    testImplementation("org.testcontainers:mockserver")
+    testImplementation("org.testcontainers:nginx")
+    testImplementation("org.testcontainers:consul")
+    testImplementation("org.testcontainers:influxdb")
+    testImplementation("org.testcontainers:activemq")
+    testImplementation("org.testcontainers:grafana")
+    testImplementation("org.testcontainers:docker-compose")
+    testImplementation("org.testcontainers:ldap")
+    testImplementation("org.testcontainers:jdbc-test")
+    testImplementation("org.testcontainers:docs-examples")
+    testImplementation("org.testcontainers:k6")
+
+    testImplementation("org.testcontainers:r2dbc")
+    testImplementation("org.testcontainers:rabbitmq")
+*/
+
 
 }
 hibernate {
