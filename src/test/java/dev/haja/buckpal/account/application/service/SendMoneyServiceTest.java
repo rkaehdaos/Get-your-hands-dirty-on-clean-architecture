@@ -61,10 +61,8 @@ class SendMoneyServiceTest {
         givenDepositWillSucceed(targetAccount);
 
         SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(
-            sourceAccount.getId().orElseThrow(
-                () -> new IllegalStateException("소스 계정 ID가 포함되어야 합니다.")),
-            targetAccount.getId().orElseThrow(
-                () -> new IllegalStateException("대상 계정 ID가 포함되어야 합니다.")),
+            requireAccountId(sourceAccount, "Source"),
+            requireAccountId(targetAccount, "Target"),
             Money.of(300L));
         boolean success = sendMoneyService.sendMoney(sendMoneyCommand);
         assertThat(success).isFalse();
@@ -94,10 +92,8 @@ class SendMoneyServiceTest {
 
         Money money = Money.of(500L);
         SendMoneyCommand sendMoneyCommand = new SendMoneyCommand(
-            sourceAccount.getId().orElseThrow(
-                () -> new IllegalStateException("Source account ID should be present")),
-            targetAccount.getId().orElseThrow(
-                () -> new IllegalStateException("Target account ID should be present")),
+            requireAccountId(sourceAccount, "Source"),
+            requireAccountId(targetAccount, "Target"),
             money);
         boolean success = sendMoneyService.sendMoney(sendMoneyCommand);
         assertThat(success).isTrue();
@@ -172,6 +168,11 @@ class SendMoneyServiceTest {
             Long.MAX_VALUE,
             new BuckPalConfigurationProperties.Account(days)
         );
+    }
+
+    private AccountId requireAccountId(Account account, String accountType) {
+        return account.getId().orElseThrow(
+            () -> new IllegalStateException(accountType + " account ID should be present"));
     }
 
     @Test
