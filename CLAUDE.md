@@ -95,4 +95,4 @@ fun givenValidAccounts_whenTransferMoney_thenTransactionSucceeds() {
 - 포트 중심 설계 (인터페이스가 계약 정의)
 - 도메인 엔티티에 캡슐화된 비즈니스 규칙
 - 계층 간 관심사의 깔끔한 분리
-- 나에게 대답할때는 한국어로 대답해줘. 성능에 문제가 없다면 CLAUDE.md도 한국어로 저장해주면 좋겠어
+- 성능에 문제가 없다면 CLAUDE.md도 한국어로 저장해주면 좋겠어
