@@ -1,93 +1,98 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+이 파일은 Claude Code (claude.ai/code)가 이 저장소에서 작업할 때 참고할 가이드를 제공합니다.
 
-## Project Overview
+## 개발 명령어
 
-This is a toy project demonstrating **Hexagonal Architecture** (Ports & Adapters) and **Clean Code** principles using Spring Boot, Java 24, and Kotlin. The project implements a simple money transfer system ("BuckPal") showcasing proper domain-driven design and architectural boundaries.
+### 빌드 및 테스트
+- `./gradlew build` - 테스트 포함 전체 빌드
+- `./gradlew test` - 모든 테스트 실행  
+- `./gradlew clean` - 빌드 디렉토리 정리
+- `./gradlew bootRun` - Spring Boot 애플리케이션 실행
+- `./gradlew bootJar` - 실행 가능한 JAR 생성
 
-## Common Commands
+### 단일 테스트 실행
+- `./gradlew test --tests "클래스명"` - 특정 테스트 클래스 실행
+- `./gradlew test --tests "클래스명.메서드명"` - 특정 테스트 메서드 실행
 
-### Build & Test
-```bash
-# Full build with tests
-./gradlew build
+### 네이티브 이미지 (GraalVM)
+- `./gradlew nativeCompile` - 네이티브 이미지 컴파일
+- `./gradlew nativeRun` - 네이티브 실행 파일 실행
+- `./gradlew nativeTest` - 네이티브 바이너리로 테스트 실행
 
-# Run tests only
-./gradlew test
+## 프로젝트 아키텍처
 
-# Run a specific test class
-./gradlew test --tests "SendMoneyServiceTest"
+이 프로젝트는 Spring Boot와 함께 클린 아키텍처 원칙을 보여주는 **헥사고날 아키텍처** 구현체입니다.
 
-# Run tests with detailed output
-./gradlew test --info
-
-# Clean build
-./gradlew clean build
+### 핵심 구조
+```
+├── domain/           # 비즈니스 엔티티 및 규칙 (Account, Money, Activity)
+├── application/      # 유스케이스 및 포트
+│   ├── port/in/     # 인커밍 포트 (유스케이스)
+│   ├── port/out/    # 아웃고잉 포트 (리포지토리 인터페이스)  
+│   └── service/     # 유스케이스를 구현하는 애플리케이션 서비스
+└── adapter/         # 외부 세계 어댑터
+    ├── in/web/      # REST 컨트롤러 (인커밍)
+    └── out/persistence/ # JPA 리포지토리 (아웃고잉)
 ```
 
-### Development
-```bash
-# Run application locally
-./gradlew bootRun
+### 주요 패턴
+- **포트 & 어댑터**: 비즈니스 로직과 외부 관심사의 명확한 분리
+- **의존성 역전**: 도메인 계층은 외부 의존성이 없음
+- **CQRS 스타일**: 조회와 명령 책임 분리
+- **도메인 이벤트**: 송금 활동을 도메인 이벤트로 모델링
 
-# Check for dependency updates
-./gradlew dependencyUpdates
+### 아키텍처 테스트
+- ArchUnit 테스트가 `DependencyRuleTests.java:23`에서 헥사고날 아키텍처 규칙을 강제
+- 커스텀 `HexagonalArchitecture` DSL이 계층 의존성을 검증
+
+## 언어 마이그레이션 전략
+
+**중요**: 이 프로젝트는 Java에서 Kotlin으로 마이그레이션 중입니다. 다음 가이드라인을 따르세요:
+
+### AI 응답 요구사항
+- **항상 한국어로 응답**
+- **코드 예시는 항상 Kotlin으로 제공** (Java 아님)
+- 변경 시 Java보다 Kotlin 코드를 우선
+
+### 마이그레이션 우선순위
+1. **값 객체** (Money, AccountId) → Kotlin data class
+2. **도메인 엔티티** (Account, Activity) → 적절한 캡슐화를 가진 Kotlin
+3. **애플리케이션 서비스** → 함수형 프로그래밍 요소를 포함한 Kotlin
+
+## 테스트 표준
+
+### 테스트 구조
+- 한국어 설명이 포함된 `@DisplayName` 사용
+- AAA 패턴 따르기 (Arrange, Act, Assert)
+- BDD 스타일 명명: `given...when...then...`
+- BDDMockito 스타일 사용: `given().willReturn()` 및 `then().should()`
+
+### 예시 패턴
+```kotlin
+@Test
+@DisplayName("계좌 이체가 성공적으로 처리되는 경우")
+fun givenValidAccounts_whenTransferMoney_thenTransactionSucceeds() {
+    // given, when, then
+}
 ```
 
-## Architecture Structure
+## 기술 구성
 
-### Hexagonal Architecture Layers
+### Java/Kotlin 설정
+- **JDK**: 24 (미리보기 기능 사용)
+- **Kotlin**: 2.2.0 with 엄격한 null 안전성 (`-Xjsr305=strict`)
+- **Spring Boot**: 3.5.4 네이티브 이미지 지원
 
-**Domain Layer** (`account/domain/`):
-- Pure business logic with no external dependencies
-- `Account`: Aggregate root with business rules (withdraw/deposit validation)
-- `Money`: Value object for monetary calculations
-- `Activity`: Entity representing money transfer activities
-- `ActivityWindow`: Collection wrapper managing activity periods
+### 주요 의존성
+- **MapStruct**: 객체 매핑 (Lombok과 통합)
+- **ArchUnit**: 아키텍처 테스트
+- **H2**: 테스트용 인메모리 데이터베이스
+- **Spring Data JPA**: 영속성 계층
 
-**Application Layer** (`account/application/`):
-- **Ports** (`port/in/`, `port/out/`): Interface definitions for inbound/outbound operations
-- **Services** (`service/`): Use case implementations that orchestrate domain objects
-- `SendMoneyService`: Main business process orchestration with transaction management
-
-**Adapter Layer** (`account/adapter/`):
-- **Inbound** (`in/web/`): REST controllers converting HTTP requests to domain commands
-- **Outbound** (`out/persistence/`): JPA adapters implementing persistence ports
-- `AccountPersistenceAdapter`: Implements both `LoadAccountPort` and `UpdateAccountStatePort`
-
-### Key Architectural Patterns
-
-1. **Dependency Inversion**: Application layer depends on port interfaces, not concrete adapters
-2. **Command Pattern**: `SendMoneyCommand` encapsulates transfer requests
-3. **Factory Methods**: Domain entities use static factory methods (`Account.withId()`, `Account.withoutId()`)
-4. **Mapper Pattern**: `AccountMapper` handles domain ↔ JPA entity conversion
-
-## Architecture Validation
-
-The project uses **ArchUnit** to enforce architectural rules:
-- `DependencyRuleTests`: Validates layer dependencies
-- `HexagonalArchitecture`: Custom DSL for hexagonal architecture validation
-- Run with: `./gradlew test --tests "*DependencyRuleTests*"`
-
-## Technology Stack
-
-- **Java 24** with **Kotlin 2.2** support
-- **Spring Boot 3.5** with JPA/Hibernate
-- **H2 Database** for development/testing
-- **MapStruct** for mapping between layers
-- **Lombok** for boilerplate reduction
-- **ArchUnit** for architecture testing
-
-## Development Notes
-
-- Uses **strict null safety** in Kotlin (`allWarningsAsErrors = true`)
-- **Parallel test execution** enabled for faster feedback
-- **AOT compilation** configured for GraalVM native image support
-- Database schema recreated on each run (`ddl-auto: create-drop`)
-
-## Documentation References
-
-- **Testing Standards**: See [docs/testing-standards.md](docs/testing-standards.md)
-- **Architecture Roadmap**: See [docs/architecture-roadmap.md](docs/architecture-roadmap.md)
-- **AI Interaction Guidelines**: See [docs/ai-interaction-guidelines.md](docs/ai-interaction-guidelines.md)
+### 유지해야 할 아키텍처 원칙
+- 도메인 계층 독립성 (외부 의존성 없음)
+- 포트 중심 설계 (인터페이스가 계약 정의)
+- 도메인 엔티티에 캡슐화된 비즈니스 규칙
+- 계층 간 관심사의 깔끔한 분리
+- 나에게 대답할때는 한국어로 대답해줘. 성능에 문제가 없다면 CLAUDE.md도 한국어로 저장해주면 좋겠어
