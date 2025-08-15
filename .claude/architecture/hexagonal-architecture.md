@@ -39,13 +39,19 @@ public class Account {
 
 **Money.java** - 값 객체 (Value Object)
 ```java
+@Value
 public class Money {
-    private final BigInteger amount;
+    @NonNull BigInteger amount;
     
-    public Money add(Money money)
-    public Money subtract(Money money)
+    // 정적 메서드
+    public static Money add(Money a, Money b)
+    public static Money subtract(Money a, Money b)
+    
+    // 인스턴스 메서드
+    public Money plus(Money money)
+    public Money minus(Money money)
     public boolean isPositiveOrZero()
-    public boolean isGreaterThan(Money money)
+    public boolean isGreaterThanOrEqualTo(Money money)
 }
 ```
 
