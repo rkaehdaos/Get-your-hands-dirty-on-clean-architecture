@@ -26,9 +26,9 @@ public class Account {
     private ActivityWindow activityWindow;
     
     // 비즈니스 메서드들
-    public boolean withdraw(Money money, AccountId targetAccountId)
-    public boolean deposit(Money money, AccountId sourceAccountId)
-    public Money calculateBalance()
+    public boolean withdraw(Money money, AccountId targetAccountId);
+    public boolean deposit(Money money, AccountId sourceAccountId);
+    public Money calculateBalance();
 }
 ```
 
@@ -44,14 +44,14 @@ public class Money {
     @NonNull BigInteger amount;
     
     // 정적 메서드
-    public static Money add(Money a, Money b)
-    public static Money subtract(Money a, Money b)
+    public static Money add(Money a, Money b);
+    public static Money subtract(Money a, Money b);
     
     // 인스턴스 메서드
-    public Money plus(Money money)
-    public Money minus(Money money)
-    public boolean isPositiveOrZero()
-    public boolean isGreaterThanOrEqualTo(Money money)
+    public Money plus(Money money);
+    public Money minus(Money money);
+    public boolean isPositiveOrZero();
+    public boolean isGreaterThanOrEqualTo(Money money);
 }
 ```
 
@@ -117,6 +117,7 @@ class SendMoneyController {
         // DTO → 도메인 Command 변환
         // 유스케이스 호출
         // HTTP 응답 생성
+        return ResponseEntity.ok().build();
     }
 }
 ```
