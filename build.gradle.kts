@@ -8,7 +8,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "6.6.22.Final" //TODO: gradle 9.0 지원 버전 나올시 처리할 것
+    id("org.hibernate.orm") version "6.6.26.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.spring") version "2.2.0"
