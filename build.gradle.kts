@@ -12,7 +12,7 @@ plugins {
     id("org.graalvm.buildtools.native") version "0.10.6"
     kotlin("jvm") version "2.2.20"
     kotlin("plugin.spring") version "2.2.20"
-    kotlin("plugin.jpa") version "2.2.0"
+    kotlin("plugin.jpa") version "2.2.20"
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
