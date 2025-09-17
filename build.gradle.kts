@@ -13,8 +13,7 @@ plugins {
     kotlin("jvm") version "2.2.20"
     kotlin("plugin.spring") version "2.2.20"
     kotlin("plugin.jpa") version "2.2.20"
-    // 자바 혼합 컨버팅 위해서
-    kotlin("plugin.lombok") version "2.2.20"
+
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
