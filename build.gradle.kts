@@ -11,7 +11,7 @@ plugins {
     id("org.hibernate.orm") version "6.6.26.Final"
     id("org.graalvm.buildtools.native") version "0.10.6"
     kotlin("jvm") version "2.2.20"
-    kotlin("plugin.spring") version "2.2.0"
+    kotlin("plugin.spring") version "2.2.20"
     kotlin("plugin.jpa") version "2.2.0"
 }
 group = "dev.haja"
