@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     java
-    id("org.springframework.boot") version "3.5.4"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "6.6.22.Final" //TODO: gradle 9.0 지원 버전 나올시 처리할 것
     id("org.graalvm.buildtools.native") version "0.10.6"
