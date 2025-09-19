@@ -45,6 +45,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+    // Jakarta Persistence API 3.2.0 호환성 (Hibernate 7.x 지원)
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
+
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -111,7 +114,7 @@ dependencies {
 }
 hibernate {
     enhancement {
-        enableAssociationManagement = true
+        enableAssociationManagement = false  // Hibernate 7.x에서 deprecated, 성능 최적화를 위해 비활성화
     }
 }
 
