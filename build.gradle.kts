@@ -6,13 +6,14 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     java
-    id("org.springframework.boot") version "3.5.4"
-    id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "6.6.22.Final" //TODO: gradle 9.0 지원 버전 나올시 처리할 것
-    id("org.graalvm.buildtools.native") version "0.10.6"
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    kotlin("plugin.jpa") version "2.2.0"
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    id("org.hibernate.orm")
+    id("org.graalvm.buildtools.native")
+    kotlin("jvm")
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
+
 }
 group = "dev.haja"
 var releaseVer = "v0.0.1"
@@ -43,6 +44,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Jakarta Persistence API 3.2.0 호환성 (Hibernate 7.x 지원)
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -110,7 +114,7 @@ dependencies {
 }
 hibernate {
     enhancement {
-        enableAssociationManagement = true
+        enableAssociationManagement = false  // Hibernate 7.x에서 deprecated, 성능 최적화를 위해 비활성화
     }
 }
 
