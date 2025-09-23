@@ -21,7 +21,7 @@ version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(24) }
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
     sourceCompatibility = JavaVersion.VERSION_24
 }
 
