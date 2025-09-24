@@ -13,12 +13,24 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
-
 }
+//직접 할당 고정값
+// 선언과 동시에 값이 결정되는 `즉시 초기화`
+// 컴파일러가 String 추론하므로 타입 x
+val releaseVer = "v0.0.1"
+
+// property delegation 사용 - runtime시 프로퍼티에서 값을 가져옴
+// `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
+// 외부 properties에서 값을 가져오는 delegation
+val jpaVersion: String by project
+
+
 group = "dev.haja"
-var releaseVer = "v0.0.1"
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
+
+
+
 
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(25) }
@@ -42,8 +54,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
-    // Jakarta Persistence API 3.2.0 호환성 (Hibernate 7.x 지원)
-    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
+    implementation("jakarta.persistence:jakarta.persistence-api:$jpaVersion")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
