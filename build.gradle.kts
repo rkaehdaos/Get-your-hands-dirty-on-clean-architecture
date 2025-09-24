@@ -30,9 +30,6 @@ version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 description = "new Smartwork"
 
-
-
-
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(25) }
     sourceCompatibility = JavaVersion.VERSION_24
