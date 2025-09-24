@@ -87,7 +87,7 @@ dependencies {
 //    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
 
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-
+    testImplementation("io.kotest:kotest-property:$kotestVersion")
 //    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 //    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 //    testImplementation("io.kotest:kotest-property:5.9.1")
