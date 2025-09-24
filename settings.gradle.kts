@@ -6,6 +6,8 @@ pluginManagement {
     val hibernatePluginVersion = providers.gradleProperty("hibernateVersion").orNull ?: "7.1.1.Final"
     val kotlinVersion = providers.gradleProperty("kotlinVersion").orNull ?: "2.2.20"
     val dependencyManageVer = providers.gradleProperty("dependencyManageVer").orNull ?: "1.1.7"
+    val nativeBuildVersion = providers.gradleProperty("nativeBuildVersion").orNull ?: "0.11.0"
+
 
     // ✅ 플러그인 저장소 지정 (필수!)
     repositories {
@@ -20,6 +22,6 @@ pluginManagement {
         id("org.springframework.boot") version springBootVersion
         id("io.spring.dependency-management") version dependencyManageVer
         id("org.hibernate.orm") version hibernatePluginVersion
-        id("org.graalvm.buildtools.native") version "0.11.0"
+        id("org.graalvm.buildtools.native") version nativeBuildVersion
     }
 }
