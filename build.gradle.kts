@@ -90,7 +90,7 @@ dependencies {
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-//    testImplementation("com.ninja-squad:springmockk:4.0.2") // Spring과 MockK 통합
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
