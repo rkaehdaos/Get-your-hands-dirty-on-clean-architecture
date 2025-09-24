@@ -25,6 +25,7 @@ val releaseVer = "v0.0.1"
 val jpaVersion: String by project
 val kotestVersion: String by project
 val mockkVersion: String by project
+val springMockKVersion: String by project
 
 group = "dev.haja"
 version =
@@ -90,7 +91,7 @@ dependencies {
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("com.ninja-squad:springmockk:$springMockKVersion")
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
