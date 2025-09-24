@@ -6,21 +6,32 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     java
-    id("org.springframework.boot") version "3.5.4"
-    id("io.spring.dependency-management") version "1.1.7"
-    id("org.hibernate.orm") version "6.6.22.Final" //TODO: gradle 9.0 지원 버전 나올시 처리할 것
-    id("org.graalvm.buildtools.native") version "0.10.6"
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    kotlin("plugin.jpa") version "2.2.0"
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    id("org.hibernate.orm")
+    id("org.graalvm.buildtools.native")
+    kotlin("jvm")
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
 }
+//직접 할당 고정값
+// 선언과 동시에 값이 결정되는 `즉시 초기화`
+// 컴파일러가 String 추론하므로 타입 x
+val releaseVer = "v0.0.1"
+
+// property delegation 사용 - runtime시 프로퍼티에서 값을 가져옴
+// `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
+// 외부 properties에서 값을 가져오는 delegation
+val jpaVersion: String by project
+
+
 group = "dev.haja"
-var releaseVer = "v0.0.1"
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
+description = "new Smartwork"
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(24) }
+    toolchain { languageVersion = JavaLanguageVersion.of(25) }
     sourceCompatibility = JavaVersion.VERSION_24
 }
 
@@ -31,9 +42,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://repo.spring.io/milestone") }
-    gradlePluginPortal()
-    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -43,6 +51,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    implementation("jakarta.persistence:jakarta.persistence-api:$jpaVersion")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -71,7 +81,6 @@ dependencies {
 
     // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("com.github.consoleau:kassava:2.1.0") // com.github.{사용자 이름}:{repository name}:{tag}
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -110,7 +119,7 @@ dependencies {
 }
 hibernate {
     enhancement {
-        enableAssociationManagement = true
+        enableAssociationManagement = false  // Hibernate 7.x에서 deprecated, 성능 최적화를 위해 비활성화
     }
 }
 
