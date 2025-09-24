@@ -96,3 +96,4 @@ fun givenValidAccounts_whenTransferMoney_thenTransactionSucceeds() {
 - 도메인 엔티티에 캡슐화된 비즈니스 규칙
 - 계층 간 관심사의 깔끔한 분리
 - 성능에 문제가 없다면 CLAUDE.md도 한국어로 저장해주면 좋겠어
+- 쉘 작업시 gh active account가 `rkaehdaos`인지 확인할것. 아닌 경우 `gh auth switch`등을 이용해서 바꾸고 작업할 것.
