@@ -89,8 +89,6 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    // TODO: Kotest 6.0부터 데이터 테스트가 코어에 포함되서 아래 의존성 불필요
-//    implementation("io.kotest:kotest-framework-datatest:5.9.1")
 //    testImplementation("io.mockk:mockk:1.13.13")
 //    testImplementation("com.ninja-squad:springmockk:4.0.2") // Spring과 MockK 통합
 
