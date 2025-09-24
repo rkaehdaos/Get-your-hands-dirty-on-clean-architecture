@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # GitHub personal access token
-TOKEN="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"
+TOKEN="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"
 # Repository information
-OWNER="thebusinesson"
+OWNER="rkaehdaos"
 REPO="Get-your-hands-dirty-on-clean-architecture"
 
 # Get all cache keys
