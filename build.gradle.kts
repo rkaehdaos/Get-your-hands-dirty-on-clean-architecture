@@ -28,6 +28,7 @@ val jpaVersion: String by project
 group = "dev.haja"
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
+description = "new Smartwork"
 
 
 

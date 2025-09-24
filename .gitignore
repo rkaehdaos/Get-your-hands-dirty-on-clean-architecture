@@ -35,3 +35,23 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### OS별 파일 ###
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+### Spring Boot ###
+.spring-boot-devtools.properties
+
+### JFR ###
+*.jfr
+
+### 로그 파일 ###
+logs/
+*.log
+
+### 데이터베이스 ###
+*.db
+*.sqlite
+*.h2.db
