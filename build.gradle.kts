@@ -24,7 +24,7 @@ val releaseVer = "v0.0.1"
 // 외부 properties에서 값을 가져오는 delegation
 val jpaVersion: String by project
 val kotestVersion: String by project
-
+val mockkVersion: String by project
 
 group = "dev.haja"
 version =
@@ -89,7 +89,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-//    testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 //    testImplementation("com.ninja-squad:springmockk:4.0.2") // Spring과 MockK 통합
 
     // dev only
