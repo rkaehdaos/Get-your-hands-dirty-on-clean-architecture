@@ -23,7 +23,9 @@ val releaseVer = "v0.0.1"
 // `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
 // 외부 properties에서 값을 가져오는 delegation
 val jpaVersion: String by project
-
+val kotestVersion: String by project
+val mockkVersion: String by project
+val springMockKVersion: String by project
 
 group = "dev.haja"
 version =
@@ -82,6 +84,15 @@ dependencies {
     // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    // Kotlin 테스트 라이브러리 : KotestVersion
+//    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
+
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("com.ninja-squad:springmockk:$springMockKVersion")
+
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
@@ -115,11 +126,12 @@ dependencies {
     testImplementation("org.testcontainers:rabbitmq")
 */
 
-
 }
 hibernate {
     enhancement {
-        enableAssociationManagement = false  // Hibernate 7.x에서 deprecated, 성능 최적화를 위해 비활성화
+        // Hibernate 7.x에서 deprecated
+        //  성능 최적화를 위해 비활성화
+        enableAssociationManagement = false
     }
 }
 
@@ -165,7 +177,10 @@ tasks.withType<KotlinCompile> {
 // null safety strict
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict", "-opt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs.addAll(
+            "-Xjsr305=strict",
+            "-opt-in=kotlin.RequiresOptIn"
+        )
         allWarningsAsErrors = true
     }
 }
