@@ -143,7 +143,7 @@ class LongestLegOverTestsKotlinKotest : FreeSpec({
 
         "불변 조건 (Property-based testing)" - {
             "반환된 구간은 항상 입력 리스트에 포함되어야 함" {
-                repeat(10) { // 10번의 랜덤 테스트
+                repeat(10) {
                     val legs = List(Random.nextInt(1, 10)) { index ->
                         "leg$index" lasting Duration.ofMinutes(Random.nextLong(1, 1000))
                     }
@@ -157,7 +157,7 @@ class LongestLegOverTestsKotlinKotest : FreeSpec({
             }
 
             "반환된 구간은 항상 threshold보다 길어야 함" {
-                repeat(10) { // 10번의 랜덤 테스트
+                repeat(10) {
                     val legs = List(Random.nextInt(1, 10)) { index ->
                         "leg$index" lasting Duration.ofHours(Random.nextLong(1, 100))
                     }
