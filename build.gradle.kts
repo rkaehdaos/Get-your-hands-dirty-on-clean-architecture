@@ -33,7 +33,7 @@ version =
 description = "new Smartwork"
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(25) }
+    toolchain { languageVersion = JavaLanguageVersion.of(24) }
     sourceCompatibility = JavaVersion.VERSION_24
 }
 
