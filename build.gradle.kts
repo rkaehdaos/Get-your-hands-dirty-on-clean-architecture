@@ -46,8 +46,9 @@ repositories {
 dependencies {
     // spring
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
-    // spring AP
+    // spring AP - Java + Kotlin 모두 지원
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -143,6 +144,15 @@ hibernate {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+// JAR 태스크: 중복 파일 처리 전략 (KAPT + annotationProcessor 병행 시)
+tasks.named<Jar>("jar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named<Jar>("bootJar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // 일반 Java 컴파일에서는 경고 활성화
