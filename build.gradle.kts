@@ -66,10 +66,14 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // test
+    // Test - Spring Boot BOM이 관리
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // BOM에서 관리하지 않는 라이브러리들만 버전 명시
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.4.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0")
 
     // h2database
     runtimeOnly("com.h2database:h2")
