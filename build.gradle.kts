@@ -13,6 +13,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
+    kotlin("kapt")
 }
 //직접 할당 고정값
 // 선언과 동시에 값이 결정되는 `즉시 초기화`
@@ -125,6 +126,13 @@ dependencies {
 */
 
 }
+
+// KAPT 설정: Java annotation processor와 병행 실행
+kapt {
+    keepJavacAnnotationProcessors = true  // Java AP 병행 실행 (Lombok 처리용)
+    correctErrorTypes = true              // 타입 에러 정확도 향상
+}
+
 hibernate {
     enhancement {
         // Hibernate 7.x에서 deprecated
@@ -177,6 +185,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")             //  JSR-305 애노테이션의 null 안정성 어노테이션을 엄격
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn") // 실험적 API등 API를 사용할 때 해당 옵트인 어노테이션 사용을 허용
+        freeCompilerArgs.add("-Xjvm-default=all-compatibility") // Java 상호운용성 개선
         allWarningsAsErrors = true
         jvmTarget.set(JvmTarget.JVM_24)
         languageVersion.set(KotlinVersion.KOTLIN_2_2)
