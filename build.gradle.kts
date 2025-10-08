@@ -99,7 +99,7 @@ dependencies {
     // MapStruct Test only
     testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
 
-    // Lombok
+    // Lombok(mapStruct 뒤에 와야 함)
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -158,10 +158,24 @@ dependencies {
 
 }
 
-// KAPT 설정: Java annotation processor와 병행 실행
 kapt {
     keepJavacAnnotationProcessors = true  // Java AP 병행 실행 (Lombok 처리용)
     correctErrorTypes = true              // 타입 에러 정확도 향상
+    arguments {
+        arg("mapstruct.defaultComponentModel", "spring")
+        arg("mapstruct.defaultInjectionStrategy", "constructor")
+        // local, dev mode
+        arg("mapstruct.unmappedSourcePolicy", "WARN")
+        arg("mapstruct.unmappedTargetPolicy", "WARN")
+        arg("mapstruct.verbose", "true")
+        arg("mapstruct.suppressGeneratorTimestamp", "true")
+        arg("mapstruct.suppressGeneratorVersionInfoComment", "true")
+        arg("mapstruct.defaultNullValuePropertyMappingStrategy", "SET_TO_NULL")
+    }
+    javacOptions {
+        option("-source", "24")
+        option("-target", "24")
+    }
 }
 
 hibernate {
