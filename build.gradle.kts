@@ -78,11 +78,12 @@ dependencies {
 
 
 
-    // MapStruct
+    // MapStruct Core
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
-    testImplementation("org.mapstruct:mapstruct:${mapstructVersion}")
     annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    kaptTest("org.mapstruct:mapstruct-processor:${mapstructVersion}")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
