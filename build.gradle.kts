@@ -166,10 +166,6 @@ kapt {
         arg("mapstruct.suppressGeneratorVersionInfoComment", "true")
         arg("mapstruct.defaultNullValuePropertyMappingStrategy", "SET_TO_NULL")
     }
-    javacOptions {
-        option("-source", "24")
-        option("-target", "24")
-    }
 }
 
 hibernate {
