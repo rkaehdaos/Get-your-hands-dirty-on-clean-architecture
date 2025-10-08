@@ -4,7 +4,8 @@ pluginManagement {
     // 버전 변수 정의
     val springBootVersion = providers.gradleProperty("springBootVersion")
     val hibernateVersion = providers.gradleProperty("hibernateVersion")
-    val kotlinVersion = providers.gradleProperty("kotlinVersion")
+    val kotlinVersion = providers.gradleProperty("kotlinVersion").get()
+    val kspVersion = providers.gradleProperty("kspVersion").get()
     val dependencyManageVer = providers.gradleProperty("dependencyManageVer")
     val nativeBuildVersion = providers.gradleProperty("nativeBuildVersion")
 
@@ -20,6 +21,7 @@ pluginManagement {
         kotlin("plugin.spring") version kotlinVersion
         kotlin("plugin.jpa") version kotlinVersion
         kotlin("kapt") version kotlinVersion
+        id("com.google.devtools.ksp") version "${kotlinVersion}-${kspVersion}"
         id("org.springframework.boot") version springBootVersion
         id("io.spring.dependency-management") version dependencyManageVer
         id("org.hibernate.orm") version hibernateVersion
