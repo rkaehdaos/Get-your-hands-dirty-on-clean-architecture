@@ -29,6 +29,7 @@ val jpaVersion: String by project
 val kotestVersion: String by project
 val mockkVersion: String by project
 val springMockKVersion: String by project
+val mapstructVersion: String by project
 val group: String by project
 val releaseVer: String by project
 
@@ -75,15 +76,13 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.4.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0")
 
-    // h2database
-    runtimeOnly("com.h2database:h2")
-    testImplementation("com.h2database:h2")
+
 
     // MapStruct
-    implementation("org.mapstruct:mapstruct:1.6.3")
-    testImplementation("org.mapstruct:mapstruct:1.6.3")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
-    testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+    implementation("org.mapstruct:mapstruct:${mapstructVersion}")
+    testImplementation("org.mapstruct:mapstruct:${mapstructVersion}")
+    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
@@ -95,9 +94,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
-    // Kotlin 테스트 라이브러리 : KotestVersion
+//    Kotlin 테스트 라이브러리
 //    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
-
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
@@ -106,6 +104,12 @@ dependencies {
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // DB - BOM에서 버전 관리
+    // h2database
+    // main DB :  (dev, demo, prod)
+    runtimeOnly("com.h2database:h2")
+    testImplementation("com.h2database:h2")
 
 // testcontainers
 /*
