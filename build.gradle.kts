@@ -48,6 +48,7 @@ repositories {
 dependencies {
     // spring
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+
     // spring AP - Java + Kotlin 모두 지원
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
@@ -58,7 +59,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+    // JPA
     implementation("jakarta.persistence:jakarta.persistence-api:$jpaVersion")
+
+    // Kotlin - BOM에서 관리되는 버전 사용
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -84,9 +90,6 @@ dependencies {
     // Lombok과 MapStruct 통합
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-
-    // kotlin
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // Kotlin 테스트 라이브러리 : KotestVersion
 //    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
