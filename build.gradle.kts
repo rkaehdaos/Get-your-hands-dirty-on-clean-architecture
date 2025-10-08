@@ -19,7 +19,7 @@ plugins {
 //직접 할당 고정값
 // 선언과 동시에 값이 결정되는 `즉시 초기화`
 // 컴파일러가 String 추론하므로 타입 x
-val releaseVer = "v0.0.1"
+//val releaseVer = "v0.0.1"
 
 // property delegation 사용 - runtime시 프로퍼티에서 값을 가져옴
 // `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
@@ -29,11 +29,12 @@ val jpaVersion: String by project
 val kotestVersion: String by project
 val mockkVersion: String by project
 val springMockKVersion: String by project
+val group: String by project
+val releaseVer: String by project
 
-group = "dev.haja"
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
-description = "new Smartwork"
+description = "Get-your-hands-dirty-on-clean-architecture"
 
 configurations {
     compileOnly { extendsFrom(configurations.annotationProcessor.get()) }
