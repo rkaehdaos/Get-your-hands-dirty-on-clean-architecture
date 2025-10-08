@@ -80,10 +80,10 @@ dependencies {
 
     // MapStruct Core
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
+    // TODO: Kotlin 마이그레이션 끝나고 향후 Lombok 제거 시 kapt만 남기고 정리할 것
     annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-    kaptTest("org.mapstruct:mapstruct-processor:${mapstructVersion}")
 
     // MapStruct Spring Extensions
     implementation("org.mapstruct.extensions.spring:mapstruct-spring-annotations:${mapstructSpringVersion}")
