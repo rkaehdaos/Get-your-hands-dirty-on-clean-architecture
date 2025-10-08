@@ -51,6 +51,7 @@ dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
 
     // spring AP - Java + Kotlin 모두 지원
+    // TODO: Kotlin 마이그레이션 완료 시 kapt만 사용
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -93,6 +94,7 @@ dependencies {
     // MapStruct Test only
     testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
 
+    // TODO: kotlin 마이그레이션시 lombok, binding 전체 제거
     // Lombok(mapStruct 뒤에 와야 함)
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
@@ -118,7 +120,6 @@ dependencies {
     // h2database
     // main DB :  (dev, demo, prod)
     runtimeOnly("com.h2database:h2")
-    testImplementation("com.h2database:h2")
 
 // testcontainers
 /*
