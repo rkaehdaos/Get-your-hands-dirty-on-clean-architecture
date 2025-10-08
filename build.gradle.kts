@@ -89,11 +89,6 @@ dependencies {
     implementation("org.mapstruct.extensions.spring:mapstruct-spring-annotations:${mapstructSpringVersion}")
     implementation("org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringVersion}")
     kapt("org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringVersion}")
-    constraints {
-        implementation("org.apache.commons:commons-lang3:3.18.0") {
-            because("CVE-2025-48924 보안 취약점 해결")
-        }
-    }
 
     // MapStruct Test only
     testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
@@ -234,5 +229,22 @@ kotlin {
         jvmTarget.set(JvmTarget.JVM_24)
         languageVersion.set(KotlinVersion.KOTLIN_2_2)
         apiVersion.set(KotlinVersion.KOTLIN_2_2)
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        // CVE-2025-48924 보안 취약점 해결
+        force("org.apache.commons:commons-lang3:3.18.0")
+
+        // 캐시
+        // prod: 하루에 한 번만 체크
+//        cacheDynamicVersionsFor(24, TimeUnit.HOURS)
+//        cacheChangingModulesFor(24, TimeUnit.HOURS)
+
+        // dev 서버용: 10분마다 새 버전 체크 (너무 자주 체크하면 빌드 느림)
+//        cacheDynamicVersionsFor(10, TimeUnit.MINUTES)
+        // SNAPSHOT은 5분마다 체크
+//        cacheChangingModulesFor(5, TimeUnit.MINUTES)
     }
 }
