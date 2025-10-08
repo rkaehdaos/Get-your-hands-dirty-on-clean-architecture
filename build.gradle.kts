@@ -30,6 +30,7 @@ val kotestVersion: String by project
 val mockkVersion: String by project
 val springMockKVersion: String by project
 val mapstructVersion: String by project
+val mapstructSpringVersion: String by project
 val group: String by project
 val releaseVer: String by project
 
@@ -84,6 +85,19 @@ dependencies {
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     kaptTest("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+
+    // MapStruct Spring Extensions
+    implementation("org.mapstruct.extensions.spring:mapstruct-spring-annotations:${mapstructSpringVersion}")
+    implementation("org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringVersion}")
+    kapt("org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringVersion}")
+    constraints {
+        implementation("org.apache.commons:commons-lang3:3.18.0") {
+            because("CVE-2025-48924 보안 취약점 해결")
+        }
+    }
+
+    // MapStruct Test only
+    testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
