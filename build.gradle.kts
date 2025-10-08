@@ -32,11 +32,6 @@ version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 description = "new Smartwork"
 
-java {
-    toolchain { languageVersion = JavaLanguageVersion.of(24) }
-    sourceCompatibility = JavaVersion.VERSION_24
-}
-
 configurations {
     compileOnly { extendsFrom(configurations.annotationProcessor.get()) }
     testCompileOnly { extendsFrom(configurations.testAnnotationProcessor.get()) }
@@ -174,13 +169,14 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-// null safety strict
 kotlin {
+    jvmToolchain(24)
     compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xjsr305=strict",
-            "-opt-in=kotlin.RequiresOptIn"
-        )
+        freeCompilerArgs.add("-Xjsr305=strict")             //  JSR-305 애노테이션의 null 안정성 어노테이션을 엄격
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn") // 실험적 API등 API를 사용할 때 해당 옵트인 어노테이션 사용을 허용
         allWarningsAsErrors = true
+        jvmTarget.set(JvmTarget.JVM_24)
+        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+        apiVersion.set(KotlinVersion.KOTLIN_2_2)
     }
 }
