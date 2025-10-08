@@ -22,6 +22,7 @@ val releaseVer = "v0.0.1"
 // property delegation 사용 - runtime시 프로퍼티에서 값을 가져옴
 // `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
 // 외부 properties에서 값을 가져오는 delegation
+val springBootVersion: String by project
 val jpaVersion: String by project
 val kotestVersion: String by project
 val mockkVersion: String by project
@@ -43,6 +44,8 @@ repositories {
 
 dependencies {
     // spring
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+    // spring AP
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
