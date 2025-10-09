@@ -2,12 +2,12 @@ rootProject.name = "Get-your-hands-dirty-on-clean-architecture"
 
 pluginManagement {
     // 버전 변수 정의
-    val springBootVersion = providers.gradleProperty("springBootVersion")
-    val hibernateVersion = providers.gradleProperty("hibernateVersion")
+    val springBootVersion = providers.gradleProperty("springBootVersion").get()
+    val hibernateVersion = providers.gradleProperty("hibernateVersion").get()
     val kotlinVersion = providers.gradleProperty("kotlinVersion").get()
     val kspVersion = providers.gradleProperty("kspVersion").get()
-    val dependencyManageVer = providers.gradleProperty("dependencyManageVer")
-    val nativeBuildVersion = providers.gradleProperty("nativeBuildVersion")
+    val dependencyManageVer = providers.gradleProperty("dependencyManageVer").get()
+    val nativeBuildVersion = providers.gradleProperty("nativeBuildVersion").get()
 
 
     // ✅ 플러그인 저장소 지정 (필수!)
