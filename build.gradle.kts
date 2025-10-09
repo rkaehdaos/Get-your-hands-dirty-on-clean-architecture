@@ -160,6 +160,8 @@ kapt {
         arg("mapstruct.defaultComponentModel", "spring")
         arg("mapstruct.defaultInjectionStrategy", "constructor")
         // local, dev mode
+        // TODO: prod에서는 ERROR로 강화 고려
+
         arg("mapstruct.unmappedSourcePolicy", "WARN")
         arg("mapstruct.unmappedTargetPolicy", "WARN")
         arg("mapstruct.verbose", "true")
