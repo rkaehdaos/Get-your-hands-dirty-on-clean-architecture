@@ -32,6 +32,9 @@ val mapstructVersion: String by project
 val mapstructSpringVersion: String by project
 val group: String by project
 val releaseVer: String by project
+val profile = System.getProperty("spring.profiles.active")
+    ?: System.getenv("SPRING_PROFILES_ACTIVE")
+    ?: "local"
 
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
