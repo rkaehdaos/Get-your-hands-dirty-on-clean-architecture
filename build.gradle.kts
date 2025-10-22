@@ -215,6 +215,20 @@ tasks.named<Test>("test") {
     maxParallelForks = Runtime.getRuntime().availableProcessors()
     testLogging {
         events("passed", "skipped", "failed")
+        if (profile == "local" || profile == "dev") {
+            // 상세 로그
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+            showStackTraces = true
+            showCauses = true
+            showExceptions = true
+            showStandardStreams = true
+            println("🔍 테스트 상세 로그 활성화 (profile: $profile)")
+        } else {
+            // 간단한 로그 (demo, prod)
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.SHORT
+            showStackTraces = false
+            println("📝 테스트 간단 로그 (profile: $profile)")
+        }
     }
 }
 tasks.named("processTestAot").configure {
