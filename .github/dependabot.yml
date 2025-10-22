@@ -1,0 +1,41 @@
+version: 2
+updates:
+  # 백엔드 Gradle 의존성
+  - package-ecosystem: "gradle"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Seoul"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(backend)"
+      include: "scope"
+    reviewers:
+      - "Kai Ahn"
+    assignees:
+      - "Kai Ahn"
+    labels:
+      - "dependencies"
+      - "backend"
+
+  # GitHub Actions 워크플로우
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Seoul"
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    reviewers:
+      - "Kai Ahn"
+    assignees:
+      - "Kai Ahn"
+    labels:
+      - "dependencies"
+      - "ci"
