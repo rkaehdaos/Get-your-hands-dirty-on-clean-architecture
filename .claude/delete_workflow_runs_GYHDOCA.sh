@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # GitHub personal access token
-TOKEN=""
+TOKEN="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"
 # Repository information
 OWNER="rkaehdaos"
 REPO="Get-your-hands-dirty-on-clean-architecture"
