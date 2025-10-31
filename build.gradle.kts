@@ -23,6 +23,7 @@ plugins {
 // property delegation 사용 - runtime시 프로퍼티에서 값을 가져옴
 // `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
 // 외부 properties에서 값을 가져오는 delegation
+val javaVersion: String by project
 val springBootVersion: String by project
 val jpaVersion: String by project
 val kotestVersion: String by project
@@ -220,13 +221,15 @@ tasks.named("processTestAot").configure {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+//        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+    }
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")             //  JSR-305 애노테이션의 null 안정성 어노테이션을 엄격
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn") // 실험적 API등 API를 사용할 때 해당 옵트인 어노테이션 사용을 허용
-
         allWarningsAsErrors = true
-        jvmTarget.set(JvmTarget.JVM_24)
+        jvmTarget.set(JvmTarget.fromTarget(javaVersion))
         languageVersion.set(KotlinVersion.KOTLIN_2_2)
         apiVersion.set(KotlinVersion.KOTLIN_2_2)
     }
