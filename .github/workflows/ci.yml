@@ -15,20 +15,25 @@ jobs:
 
     steps:
       - name: '소스 checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # https://github.com/marketplace/actions/github-action-for-graalvm
-      - name: 'graalvm jdk24 setup'
+      - name: 'graalvm jdk25 setup'
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '24'
+          java-version: '25'
           distribution: 'graalvm'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
-          cache: ''
-      # Gradle 캐싱 및 환경 설정
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+
+      - name: Gradle 캐시 설정
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
 
       - name: 'gradle build'
         run: |
