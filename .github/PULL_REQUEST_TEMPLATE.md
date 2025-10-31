@@ -2,7 +2,7 @@
 
 ## 📋 JIRA 티켓 / Issue
 **JIRA:** [SMART-XXX](링크 첨부)
-**(선택적) 것허브 이슈 Issues:** #issue_number
+**(선택적) 깃허브 이슈 Issues:** #issue_number
 
 ---
 

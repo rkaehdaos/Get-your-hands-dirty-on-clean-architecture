@@ -78,8 +78,6 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.4.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0")
 
-
-
     // MapStruct Core
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
     // TODO: Kotlin 마이그레이션 끝나고 향후 Lombok 제거 시 kapt만 남기고 정리할 것
@@ -108,6 +106,7 @@ dependencies {
 
 //    Kotlin 테스트 라이브러리
 //    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
+//    NOTE: Kotest 버전이 5.9.1로 롤백됨 - springmockk 4.0.2와의 호환성 문제로 인해 최신 버전 사용 불가
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
@@ -223,15 +222,14 @@ tasks.named("processTestAot").configure {
 kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(javaVersion))
-//        languageVersion.set(JavaLanguageVersion.of(javaVersion))
     }
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")             //  JSR-305 애노테이션의 null 안정성 어노테이션을 엄격
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn") // 실험적 API등 API를 사용할 때 해당 옵트인 어노테이션 사용을 허용
         allWarningsAsErrors = true
         jvmTarget.set(JvmTarget.fromTarget(javaVersion))
-        languageVersion.set(KotlinVersion.KOTLIN_2_2)
-        apiVersion.set(KotlinVersion.KOTLIN_2_2)
+        languageVersion.set(KotlinVersion.KOTLIN_2_3)
+        apiVersion.set(KotlinVersion.KOTLIN_2_3)
     }
 }
 
