@@ -119,7 +119,8 @@ dependencies {
     // DB - BOM에서 버전 관리
     // h2database
     // main DB :  (dev, demo, prod)
-    runtimeOnly("com.h2database:h2")
+    testRuntimeOnly("com.h2database:h2")
+    runtimeOnly("org.postgresql:postgresql")
 
 // testcontainers
 /*
