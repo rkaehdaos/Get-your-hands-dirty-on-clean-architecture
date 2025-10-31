@@ -119,6 +119,7 @@ dependencies {
     // DB - BOM에서 버전 관리
     // H2: 개발 및 테스트 환경에서 사용
     developmentOnly("com.h2database:h2")
+    testRuntimeOnly("com.h2database:h2")
     // PostgreSQL: 프로덕션 환경에서 사용
     runtimeOnly("org.postgresql:postgresql")
 
