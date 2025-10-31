@@ -21,7 +21,8 @@ pluginManagement {
         kotlin("plugin.spring") version kotlinVersion
         kotlin("plugin.jpa") version kotlinVersion
         kotlin("kapt") version kotlinVersion
-        id("com.google.devtools.ksp") version "${kotlinVersion}-${kspVersion}"
+//        id("com.google.devtools.ksp") version "${kotlinVersion}-${kspVersion}"
+        id("com.google.devtools.ksp") version kspVersion
         id("org.springframework.boot") version springBootVersion
         id("io.spring.dependency-management") version dependencyManageVer
         id("org.hibernate.orm") version hibernateVersion
