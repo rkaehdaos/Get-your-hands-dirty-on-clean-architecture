@@ -36,6 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### Kotlin ###
+.kotlin/
+
 ### OS별 파일 ###
 .DS_Store
 Thumbs.db
