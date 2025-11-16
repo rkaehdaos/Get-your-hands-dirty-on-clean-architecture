@@ -227,6 +227,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")             //  JSR-305 애노테이션의 null 안정성 어노테이션을 엄격
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn") // 실험적 API등 API를 사용할 때 해당 옵트인 어노테이션 사용을 허용
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
         allWarningsAsErrors = true
         jvmTarget.set(JvmTarget.fromTarget(javaVersion))
         languageVersion.set(KotlinVersion.KOTLIN_2_3)
