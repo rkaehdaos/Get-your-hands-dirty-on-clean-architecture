@@ -51,8 +51,8 @@ dependencies {
     // spring
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
 
-    // spring AP - Java + Kotlin 모두 지원
-    // TODO: Kotlin 마이그레이션 완료 시 kapt만 사용
+    // Spring Boot Configuration Processor
+    // NOTE: Java → Kotlin 마이그레이션 완료 후 annotationProcessor 제거, kapt만 유지
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -89,7 +89,7 @@ dependencies {
 
     // MapStruct Core
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
-    // TODO: Kotlin 마이그레이션 끝나고 향후 Lombok 제거 시 kapt만 남기고 정리할 것
+    // NOTE: Java → Kotlin 마이그레이션 시 Lombok 제거 후 annotationProcessor 제거, kapt만 유지
     annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
@@ -102,14 +102,14 @@ dependencies {
     // MapStruct Test only
     testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
 
-    // TODO: kotlin 마이그레이션시 lombok, binding 전체 제거
-    // Lombok(mapStruct 뒤에 와야 함)
+    // Lombok - Java → Kotlin 마이그레이션 시 전체 제거
+    // NOTE: MapStruct와 함께 사용 시 Lombok이 먼저 처리되어야 함 (순서 중요)
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 
-    // Lombok과 MapStruct 통합
+    // Lombok-MapStruct 통합 바인딩 - Java → Kotlin 마이그레이션 시 제거
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
@@ -170,9 +170,7 @@ kapt {
     arguments {
         arg("mapstruct.defaultComponentModel", "spring")
         arg("mapstruct.defaultInjectionStrategy", "constructor")
-        // local, dev mode
-        // TODO: prod에서는 ERROR로 강화 고려
-
+        // NOTE: 운영 환경에서는 unmappedSourcePolicy, unmappedTargetPolicy를 ERROR로 강화 권장
         arg("mapstruct.unmappedSourcePolicy", "WARN")
         arg("mapstruct.unmappedTargetPolicy", "WARN")
         arg("mapstruct.verbose", "true")
