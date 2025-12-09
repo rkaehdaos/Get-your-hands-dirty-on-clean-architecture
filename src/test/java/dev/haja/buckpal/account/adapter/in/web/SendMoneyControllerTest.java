@@ -12,11 +12,13 @@ import dev.haja.buckpal.account.application.port.in.SendMoneyUseCase;
 import dev.haja.buckpal.account.domain.Money;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+// Spring Boot 4.0: 패키지 변경
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
+// Spring Boot 4.0: Jackson 3 패키지 변경
+import tools.jackson.databind.ObjectMapper;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.verifyNoInteractions;
 

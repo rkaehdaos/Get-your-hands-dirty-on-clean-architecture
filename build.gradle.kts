@@ -57,7 +57,8 @@ dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     // spring starter
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    // Spring Boot 4.0: spring-boot-starter-web → spring-boot-starter-webmvc
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -65,12 +66,20 @@ dependencies {
     // JPA
     implementation("jakarta.persistence:jakarta.persistence-api:$jpaVersion")
 
-    // Kotlin - BOM에서 관리되는 버전 사용
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // Kotlin - Spring Boot 4.0: Jackson 3 (tools.jackson)로 마이그레이션
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // Test - Spring Boot BOM이 관리
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Test - Spring Boot 4.0: 모듈화된 테스트 스타터 사용
+    // Spring Security를 사용하지 않으므로 security-test 제외
+    testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-security-test")
+    }
+    // Spring Boot 4.0: 슬라이스 테스트를 위한 개별 테스트 모듈
+    // starter 대신 core 모듈 직접 사용 (Spring Security를 사용하지 않으므로)
+    testImplementation("org.springframework.boot:spring-boot-webmvc-test")   // @WebMvcTest
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test") // @DataJpaTest
+    testImplementation("org.springframework.boot:spring-boot-resttestclient") // TestRestTemplate, @AutoConfigureTestRestTemplate
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
