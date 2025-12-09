@@ -6,9 +6,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static dev.haja.buckpal.common.ActivityTestData.defaultActivity;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class ActivityWindowTest {
@@ -65,6 +67,24 @@ class ActivityWindowTest {
 
     private LocalDateTime endDate() {
         return LocalDateTime.of(2019, 8, 5, 0, 0);
+    }
+
+    @Test
+    void getStartTimestamp_ShouldThrowIllegalStateException_WhenNoActivities() {
+        ActivityWindow emptyWindow = new ActivityWindow(Collections.emptyList());
+
+        assertThatThrownBy(emptyWindow::getStartTimestamp)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("활동 윈도우에 활동이 없습니다.");
+    }
+
+    @Test
+    void getEndTimestamp_ShouldThrowIllegalStateException_WhenNoActivities() {
+        ActivityWindow emptyWindow = new ActivityWindow(Collections.emptyList());
+
+        assertThatThrownBy(emptyWindow::getEndTimestamp)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("활동 윈도우에 활동이 없습니다.");
     }
 
 }

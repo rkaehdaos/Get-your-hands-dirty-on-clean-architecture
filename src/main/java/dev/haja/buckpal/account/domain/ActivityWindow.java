@@ -35,12 +35,10 @@ public class ActivityWindow {
                 .filter(activity -> activity.getTargetAccountId().equals(accountId))
                 .map(Activity::getMoney)
                 .reduce(Money.ZERO, Money::add);
-        System.out.println("depositBalance: " + depositBalance);
         Money withdrawalBalance = activities.stream()
                 .filter(activity -> activity.getSourceAccountId().equals(accountId))
                 .map(Activity::getMoney)
                 .reduce(Money.ZERO, Money::add);
-        System.out.println("withdrawalBalance: " + withdrawalBalance);
         return Money.add(depositBalance, withdrawalBalance.negate());
     }
 
@@ -60,7 +58,7 @@ public class ActivityWindow {
     public LocalDateTime getStartTimestamp() {
         return activities.stream()
                 .min(Comparator.comparing(Activity::getTimestamp))
-                .orElseThrow(IllegalAccessError::new)
+                .orElseThrow(() -> new IllegalStateException("활동 윈도우에 활동이 없습니다."))
                 .getTimestamp();
     }
 
@@ -73,7 +71,7 @@ public class ActivityWindow {
     public LocalDateTime getEndTimestamp() {
         return activities.stream()
                 .max(Comparator.comparing(Activity::getTimestamp))
-                .orElseThrow(IllegalAccessError::new)
+                .orElseThrow(() -> new IllegalStateException("활동 윈도우에 활동이 없습니다."))
                 .getTimestamp();
     }
 }

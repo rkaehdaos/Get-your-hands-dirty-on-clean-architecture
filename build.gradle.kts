@@ -51,13 +51,14 @@ dependencies {
     // spring
     implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
 
-    // spring AP - Java + Kotlin 모두 지원
-    // TODO: Kotlin 마이그레이션 완료 시 kapt만 사용
+    // Spring Boot Configuration Processor
+    // NOTE: Java → Kotlin 마이그레이션 완료 후 annotationProcessor 제거, kapt만 유지
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     // spring starter
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    // Spring Boot 4.0: spring-boot-starter-web → spring-boot-starter-webmvc
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -65,12 +66,20 @@ dependencies {
     // JPA
     implementation("jakarta.persistence:jakarta.persistence-api:$jpaVersion")
 
-    // Kotlin - BOM에서 관리되는 버전 사용
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // Kotlin - Spring Boot 4.0: Jackson 3 (tools.jackson)로 마이그레이션
+    implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // Test - Spring Boot BOM이 관리
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Test - Spring Boot 4.0: 모듈화된 테스트 스타터 사용
+    // Spring Security를 사용하지 않으므로 security-test 제외
+    testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {
+        exclude(group = "org.springframework.boot", module = "spring-boot-security-test")
+    }
+    // Spring Boot 4.0: 슬라이스 테스트를 위한 개별 테스트 모듈
+    // starter 대신 core 모듈 직접 사용 (Spring Security를 사용하지 않으므로)
+    testImplementation("org.springframework.boot:spring-boot-webmvc-test")   // @WebMvcTest
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test") // @DataJpaTest
+    testImplementation("org.springframework.boot:spring-boot-resttestclient") // TestRestTemplate, @AutoConfigureTestRestTemplate
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -80,7 +89,7 @@ dependencies {
 
     // MapStruct Core
     implementation("org.mapstruct:mapstruct:${mapstructVersion}")
-    // TODO: Kotlin 마이그레이션 끝나고 향후 Lombok 제거 시 kapt만 남기고 정리할 것
+    // NOTE: Java → Kotlin 마이그레이션 시 Lombok 제거 후 annotationProcessor 제거, kapt만 유지
     annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
@@ -93,14 +102,14 @@ dependencies {
     // MapStruct Test only
     testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
 
-    // TODO: kotlin 마이그레이션시 lombok, binding 전체 제거
-    // Lombok(mapStruct 뒤에 와야 함)
+    // Lombok - Java → Kotlin 마이그레이션 시 전체 제거
+    // NOTE: MapStruct와 함께 사용 시 Lombok이 먼저 처리되어야 함 (순서 중요)
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 
-    // Lombok과 MapStruct 통합
+    // Lombok-MapStruct 통합 바인딩 - Java → Kotlin 마이그레이션 시 제거
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
@@ -161,9 +170,7 @@ kapt {
     arguments {
         arg("mapstruct.defaultComponentModel", "spring")
         arg("mapstruct.defaultInjectionStrategy", "constructor")
-        // local, dev mode
-        // TODO: prod에서는 ERROR로 강화 고려
-
+        // NOTE: 운영 환경에서는 unmappedSourcePolicy, unmappedTargetPolicy를 ERROR로 강화 권장
         arg("mapstruct.unmappedSourcePolicy", "WARN")
         arg("mapstruct.unmappedTargetPolicy", "WARN")
         arg("mapstruct.verbose", "true")

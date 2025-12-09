@@ -50,7 +50,7 @@ public class Account {
     }
 
     /**
-     * ç한다.
+     * 계정 ID를 반환한다.
      *
      * @return Optional<AccountId> 널이면 Optional.empty(), 아니면 Optional.of(AccountId)
      */
@@ -87,7 +87,6 @@ public class Account {
                 targetAccountId,
                 LocalDateTime.now(),
                 money);
-        System.out.println("withdrawalActivity: " + withdrawal);
         this.activityWindow.addActivity(withdrawal);
         return true;
     }
