@@ -139,8 +139,21 @@ class HexagonalArchitecture private constructor(
     }
 
     private fun verifyDomainLayer(classes: JavaClasses) {
+        val domainPackagesList = _domainPackages.toList()
+
+        // 어댑터에 의존 금지
         _adapters?.let { adapters ->
-            denyAnyDependency(_domainPackages.toList(), listOf(adapters.basePackage), classes)
+            denyAnyDependency(domainPackagesList, listOf(adapters.basePackage), classes)
+        }
+
+        // 애플리케이션 계층에 의존 금지
+        _applicationLayer?.let { appLayer ->
+            denyAnyDependency(domainPackagesList, listOf(appLayer.basePackage), classes)
+        }
+
+        // 설정 패키지에 의존 금지
+        _configurationPackage?.let { configPackage ->
+            denyAnyDependency(domainPackagesList, listOf(configPackage), classes)
         }
     }
 }
