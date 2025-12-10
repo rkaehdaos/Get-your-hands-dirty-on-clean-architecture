@@ -17,7 +17,7 @@ class KotlinDependencyRuleTests {
 
     @Test
     @DisplayName("도메인 계층은 애플리케이션 계층에 의존해서는 안된다")
-    fun `domain layer should not depend on application layer`() {
+    fun domainLayerShouldNotDependOnApplicationLayer() {
         noClasses()
             .that().resideInAPackage("..domain..")
             .should().dependOnClassesThat().resideInAnyPackage("..application..")
@@ -26,7 +26,7 @@ class KotlinDependencyRuleTests {
 
     @Test
     @DisplayName("헥사고날 아키텍처 준수 (Kotlin DSL)")
-    fun `should comply with hexagonal architecture`() {
+    fun shouldComplyWithHexagonalArchitecture() {
         hexagonalArchitecture("dev.haja.buckpal.account") {
             domain("domain")
 
