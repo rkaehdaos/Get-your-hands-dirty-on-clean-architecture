@@ -79,6 +79,9 @@ dependencies {
     // starter 대신 core 모듈 직접 사용 (Spring Security를 사용하지 않으므로)
     testImplementation("org.springframework.boot:spring-boot-webmvc-test")   // @WebMvcTest
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test") // @DataJpaTest
+    // Spring Boot 4.0: RestTemplateBuilder가 restclient 모듈로 분리됨
+    // resttestclient가 restclient를 transitive 의존하지 않아 명시적 추가 필요
+    testImplementation("org.springframework.boot:spring-boot-restclient")
     testImplementation("org.springframework.boot:spring-boot-resttestclient") // TestRestTemplate, @AutoConfigureTestRestTemplate
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
