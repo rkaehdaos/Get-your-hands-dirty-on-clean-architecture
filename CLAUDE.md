@@ -61,9 +61,9 @@ src/main/java/dev/haja/buckpal/account/
 
 ## 기술 스택
 
-- **JDK**: `gradle.properties`의 `javaVersion` 참조
-- **Kotlin**: `gradle.properties`의 `kotlinVersion` 참조 (마이그레이션 진행 중)
-- **Spring Boot**: `gradle.properties`의 `springBootVersion` 참조
+- **JDK**: `gradle/libs.versions.toml`의 `[versions] java` 참조
+- **Kotlin**: `gradle/libs.versions.toml`의 `[versions] kotlin` 참조 (마이그레이션 진행 중)
+- **Spring Boot**: `gradle/libs.versions.toml`의 `[versions] springBoot` 참조
 - **영속성**: Spring Data JPA + H2 (개발/테스트) / PostgreSQL (운영)
 - **테스트**: JUnit 5, Kotest, MockK, ArchUnit
 - **매핑**: MapStruct + Lombok (Kotlin 마이그레이션 후 Lombok 제거 예정)

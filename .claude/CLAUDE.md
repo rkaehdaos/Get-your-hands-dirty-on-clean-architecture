@@ -41,10 +41,10 @@
 - **allWarningsAsErrors = true**: Kotlin 컴파일 경고를 에러로 처리
 
 ### 주요 의존성 버전 관리
-모든 버전은 `gradle.properties`에서 관리:
-- `javaVersion`, `kotlinVersion`: 언어 버전
-- `springBootVersion`: Spring Boot 버전
-- `mapstructVersion`, `kotestVersion`, `mockkVersion`: 라이브러리 버전
+모든 버전은 Gradle Version Catalog(`gradle/libs.versions.toml`)에서 중앙 관리:
+- `[versions]`: 언어(`java`, `kotlin`), 프레임워크(`springBoot`, `hibernate` 등), 라이브러리(`mapstruct`, `kotest`, `mockk` 등) 버전 정의
+- `[libraries]` / `[plugins]`: 의존성·플러그인을 alias로 선언 → `build.gradle.kts`에서 `libs.*` / `alias(libs.plugins.*)`로 참조
+- `gradle.properties`에는 빌드 환경설정(`org.gradle.*`), `group`, `releaseVer`, KAPT 동작 설정만 유지
 
 ## 설정 파일 구조
 
