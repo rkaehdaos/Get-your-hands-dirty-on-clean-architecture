@@ -13,7 +13,6 @@ dependencyManagement = "1.1.7"
 nativeBuild = "0.11.5"
 hibernate = "7.2.12.Final"
 ksp = "2.3.0"
-sonarqube = "7.3.0.8198"
 
 # 3) 라이브러리
 # Jakarta Persistence API 3.2.0 호환성 (Hibernate 7.x 지원)
@@ -60,9 +59,6 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 
 # ArchUnit
 archunit-junit5-engine = { module = "com.tngtech.archunit:archunit-junit5-engine", version.ref = "archunit" }
-
-# commons-lang3 (resolutionStrategy force 용)
-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

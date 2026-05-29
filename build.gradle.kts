@@ -112,7 +112,6 @@ dependencies {
 
 //    Kotlin 테스트 라이브러리
 //    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
-//    NOTE: Kotest 버전이 5.9.1로 롤백됨 - springmockk 4.0.2와의 호환성 문제로 인해 최신 버전 사용 불가
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.property)
     testImplementation(libs.kotest.runner.junit5)
