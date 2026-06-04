@@ -5,38 +5,32 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     java
-    id("com.google.devtools.ksp")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
-    id("org.hibernate.orm")
-    id("org.graalvm.buildtools.native")
-    kotlin("jvm")
-    kotlin("plugin.spring")
-    kotlin("plugin.jpa")
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.dependency.management)
+    alias(libs.plugins.hibernate.orm)
+    alias(libs.plugins.graalvm.native)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.kotlin.jpa)
+    alias(libs.plugins.kotlin.kapt)
 }
-//직접 할당 고정값
-// 선언과 동시에 값이 결정되는 `즉시 초기화`
-// 컴파일러가 String 추론하므로 타입 x
-//val releaseVer = "v0.0.1"
+// 의존성/플러그인 버전은 Version Catalog(gradle/libs.versions.toml)에서 관리
+// 언어 버전(java)도 카탈로그의 [versions]에서 가져옴
+val javaVersion = libs.versions.java.get()
 
-// property delegation 사용 - runtime시 프로퍼티에서 값을 가져옴
-// `:` 타입을 명시적으로 선언 - 컴파일러가 타입 추론을 못하므로
-// 외부 properties에서 값을 가져오는 delegation
-val javaVersion: String by project
-val springBootVersion: String by project
-val jpaVersion: String by project
-val kotestVersion: String by project
-val mockkVersion: String by project
-val springMockKVersion: String by project
-val mapstructVersion: String by project
-val mapstructSpringVersion: String by project
-val group: String by project
+// 프로젝트 메타데이터(group은 gradle.properties의 group으로 자동 설정)
+// releaseVer만 version 문자열 조합에 사용하므로 delegation 유지
 val releaseVer: String by project
 
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 description = "Get-your-hands-dirty-on-clean-architecture"
+
+// CVE-2025-48924 보안 취약점 해결
+// io.spring.dependency-management가 resolutionStrategy.force보다 우선하므로,
+// Spring Boot BOM의 commons-lang3 버전 프로퍼티를 카탈로그 값으로 직접 오버라이드
+extra["commons-lang3.version"] = libs.versions.commonsLang3.get()
 
 configurations {
     compileOnly { extendsFrom(configurations.annotationProcessor.get()) }
@@ -49,7 +43,7 @@ repositories {
 
 dependencies {
     // spring
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+    implementation(platform(libs.spring.boot.dependencies))
 
     // Spring Boot Configuration Processor
     // NOTE: Java → Kotlin 마이그레이션 완료 후 annotationProcessor 제거, kapt만 유지
@@ -64,7 +58,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // JPA
-    implementation("jakarta.persistence:jakarta.persistence-api:$jpaVersion")
+    implementation(libs.jakarta.persistence.api)
 
     // Kotlin - Spring Boot 4.0: Jackson 3 (tools.jackson)로 마이그레이션
     implementation("tools.jackson.module:jackson-module-kotlin")
@@ -87,23 +81,23 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // BOM에서 관리하지 않는 라이브러리들만 버전 명시
-    testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.4.1")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0")
+    testImplementation(libs.archunit.junit5.engine)
+    testImplementation(libs.mockito.kotlin)
 
     // MapStruct Core
-    implementation("org.mapstruct:mapstruct:${mapstructVersion}")
+    implementation(libs.mapstruct)
     // NOTE: Java → Kotlin 마이그레이션 시 Lombok 제거 후 annotationProcessor 제거, kapt만 유지
-    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-    testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-    kapt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    annotationProcessor(libs.mapstruct.processor)
+    testAnnotationProcessor(libs.mapstruct.processor)
+    kapt(libs.mapstruct.processor)
 
     // MapStruct Spring Extensions
-    implementation("org.mapstruct.extensions.spring:mapstruct-spring-annotations:${mapstructSpringVersion}")
-    implementation("org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringVersion}")
-    kapt("org.mapstruct.extensions.spring:mapstruct-spring-extensions:${mapstructSpringVersion}")
+    implementation(libs.mapstruct.spring.annotations)
+    implementation(libs.mapstruct.spring.extensions)
+    kapt(libs.mapstruct.spring.extensions)
 
     // MapStruct Test only
-    testImplementation("org.mapstruct.extensions.spring:mapstruct-spring-test-extensions:${mapstructSpringVersion}")
+    testImplementation(libs.mapstruct.spring.test.extensions)
 
     // Lombok - Java → Kotlin 마이그레이션 시 전체 제거
     // NOTE: MapStruct와 함께 사용 시 Lombok이 먼저 처리되어야 함 (순서 중요)
@@ -113,17 +107,16 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
 
     // Lombok-MapStruct 통합 바인딩 - Java → Kotlin 마이그레이션 시 제거
-    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-    testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+    annotationProcessor(libs.lombok.mapstruct.binding)
+    testAnnotationProcessor(libs.lombok.mapstruct.binding)
 
 //    Kotlin 테스트 라이브러리
 //    Kotest 테스트 프레임워크는 JVM, Android, 자바스크립트 및 네이티브 환경에서 지원됩니다.
-//    NOTE: Kotest 버전이 5.9.1로 롤백됨 - springmockk 4.0.2와의 호환성 문제로 인해 최신 버전 사용 불가
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-property:$kotestVersion")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("com.ninja-squad:springmockk:$springMockKVersion")
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.mockk)
+    testImplementation(libs.springmockk)
 
     // dev only
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -247,9 +240,6 @@ kotlin {
 
 configurations.all {
     resolutionStrategy {
-        // CVE-2025-48924 보안 취약점 해결
-        force("org.apache.commons:commons-lang3:3.18.0")
-
         // 캐시
         // prod: 하루에 한 번만 체크
 //        cacheDynamicVersionsFor(24, TimeUnit.HOURS)
