@@ -66,8 +66,13 @@ dependencies {
 
     // Test - Spring Boot 4.0: 모듈화된 테스트 스타터 사용
     // Spring Security를 사용하지 않으므로 security-test 제외
+    // Spring Boot 4.1: classic 테스트 스타터에 grpc-test가 편입됨.
+    // grpc-test의 spring.factories가 GrpcPortInfoApplicationContextInitializer를
+    // 무조건 등록 → GrpcServerStartedEvent(spring-grpc) 미존재로 컨텍스트 로딩 실패.
+    // gRPC를 사용하지 않으므로 grpc-test 제외
     testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {
         exclude(group = "org.springframework.boot", module = "spring-boot-security-test")
+        exclude(group = "org.springframework.boot", module = "spring-boot-grpc-test")
     }
     // Spring Boot 4.0: 슬라이스 테스트를 위한 개별 테스트 모듈
     // starter 대신 core 모듈 직접 사용 (Spring Security를 사용하지 않으므로)
