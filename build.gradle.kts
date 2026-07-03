@@ -20,8 +20,9 @@ plugins {
 val javaVersion = libs.versions.java.get()
 
 // 프로젝트 메타데이터(group은 gradle.properties의 group으로 자동 설정)
-// releaseVer만 version 문자열 조합에 사용하므로 delegation 유지
-val releaseVer: String by project
+// releaseVer만 version 문자열 조합에 사용.
+// Gradle 10에서 제거될 'by project' 위임 문법 대신 Provider API 사용
+val releaseVer: String = providers.gradleProperty("releaseVer").get()
 
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
@@ -66,8 +67,13 @@ dependencies {
 
     // Test - Spring Boot 4.0: 모듈화된 테스트 스타터 사용
     // Spring Security를 사용하지 않으므로 security-test 제외
+    // Spring Boot 4.1: classic 테스트 스타터에 grpc-test가 편입됨.
+    // grpc-test의 spring.factories가 GrpcPortInfoApplicationContextInitializer를
+    // 무조건 등록 → GrpcServerStartedEvent(spring-grpc) 미존재로 컨텍스트 로딩 실패.
+    // gRPC를 사용하지 않으므로 grpc-test 제외
     testImplementation("org.springframework.boot:spring-boot-starter-test-classic") {
         exclude(group = "org.springframework.boot", module = "spring-boot-security-test")
+        exclude(group = "org.springframework.boot", module = "spring-boot-grpc-test")
     }
     // Spring Boot 4.0: 슬라이스 테스트를 위한 개별 테스트 모듈
     // starter 대신 core 모듈 직접 사용 (Spring Security를 사용하지 않으므로)
@@ -176,13 +182,8 @@ kapt {
     }
 }
 
-hibernate {
-    enhancement {
-        // Hibernate 7.x에서 deprecated
-        //  성능 최적화를 위해 비활성화
-        enableAssociationManagement = false
-    }
-}
+// Hibernate 7.x에서 association management enhancement가 deprecated 되었고,
+// 기본값이 비활성화(false)이므로 별도 설정 없이 기본값 사용 (deprecated 경고 제거)
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
