@@ -8,7 +8,7 @@ kotlin = "2.4.0"
 java = "25"
 
 # 2) 프레임워크 / 빌드 플러그인
-springBoot = "4.0.6"
+springBoot = "4.0.7"
 dependencyManagement = "1.1.7"
 nativeBuild = "0.11.5"
 hibernate = "7.2.12.Final"
