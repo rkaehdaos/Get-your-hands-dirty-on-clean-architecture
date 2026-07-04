@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -231,11 +230,12 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")             //  JSR-305 애노테이션의 null 안정성 어노테이션을 엄격
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn") // 실험적 API등 API를 사용할 때 해당 옵트인 어노테이션 사용을 허용
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
         allWarningsAsErrors = true
         jvmTarget.set(JvmTarget.fromTarget(javaVersion))
-        languageVersion.set(KotlinVersion.KOTLIN_2_3)
-        apiVersion.set(KotlinVersion.KOTLIN_2_3)
+        // languageVersion / apiVersion 미지정 → 플러그인(Kotlin Version Catalog) 기본값 자동 추종.
+        // 애플리케이션이라 apiVersion 고정이 불필요하고, 컴파일러 버전이 곧 단일 언어 표준.
+        // 명시하면 컴파일러 버전을 미러링만 하면서 업그레이드마다 lockstep bump가 필요하고,
+        // 누락 시 allWarningsAsErrors와 맞물려 deprecated-language-version 경고가 빌드 실패로 이어짐.
     }
 }
 
