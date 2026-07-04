@@ -234,8 +234,8 @@ kotlin {
         freeCompilerArgs.add("-Xannotation-default-target=param-property")
         allWarningsAsErrors = true
         jvmTarget.set(JvmTarget.fromTarget(javaVersion))
-        languageVersion.set(KotlinVersion.KOTLIN_2_3)
-        apiVersion.set(KotlinVersion.KOTLIN_2_3)
+        languageVersion.set(KotlinVersion.KOTLIN_2_4)
+        apiVersion.set(KotlinVersion.KOTLIN_2_4)
     }
 }
 
