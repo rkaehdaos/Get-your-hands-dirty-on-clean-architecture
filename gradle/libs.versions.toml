@@ -26,6 +26,7 @@ lombokMapstructBinding = "0.2.0"
 
 # 4) 정적 분석
 pmd = "7.24.0"
+detekt = "2.0.0-alpha.5"
 
 [libraries]
 # Spring Boot BOM (platform)
@@ -69,3 +70,5 @@ spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
 dependency-management = { id = "io.spring.dependency-management", version.ref = "dependencyManagement" }
 hibernate-orm = { id = "org.hibernate.orm", version.ref = "hibernate" }
 graalvm-native = { id = "org.graalvm.buildtools.native", version.ref = "nativeBuild" }
+# detekt 2.0부터 플러그인 ID가 io.gitlab.arturbosch.detekt → dev.detekt 로 변경됨
+detekt = { id = "dev.detekt", version.ref = "detekt" }

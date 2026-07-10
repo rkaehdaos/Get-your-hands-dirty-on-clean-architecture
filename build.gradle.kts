@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter
 plugins {
     java
     pmd
+    alias(libs.plugins.detekt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.dependency.management)
@@ -201,6 +202,16 @@ tasks.matching {
     it.name == "pmdTest" || it.name == "pmdAot" || it.name == "pmdAotTest"
 }.configureEach {
     enabled = false
+}
+
+// detekt 정적 분석: Kotlin 소스 담당 (Java는 PMD가 담당)
+// PMD와 동일 정책: 프로덕션 소스(main)만 분석, 테스트 소스는 제외
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    buildUponDefaultConfig = true                   // 기본 룰셋 위에 커스텀 설정 오버레이
+    config.setFrom(".github/detekt/detekt.yml")     // 커스텀 설정 (PMD 룰셋과 동일하게 .github 하위 배치)
+    source.setFrom("src/main/kotlin")               // 프로덕션 Kotlin만 (detekt 기본값은 test 포함이므로 명시적 한정)
+    ignoreFailures = false                          // 위반 시 빌드 실패 (PMD와 동일 정책)
 }
 
 // JAR 태스크: 중복 파일 처리 전략 (KAPT + annotationProcessor 병행 시)
