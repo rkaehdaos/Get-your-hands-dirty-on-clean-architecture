@@ -5,6 +5,7 @@ import dev.haja.buckpal.account.domain.Account.AccountId;
 import dev.haja.buckpal.account.domain.ActivityWindow;
 import dev.haja.buckpal.account.domain.Money;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 // Spring Boot 4.0: 패키지 변경
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -17,8 +18,11 @@ import static dev.haja.buckpal.common.AccountTestData.defaultAccount;
 import static dev.haja.buckpal.common.ActivityTestData.defaultActivity;
 import static org.assertj.core.api.Assertions.assertThat;
 
+// Hibernate가 네이티브 이미지에서 ServiceLoader로 ByteBuddy BytecodeProvider를 찾지 못해
+// (BytecodeProviderImpl not found) JPA 컨텍스트 로드에 실패 → 네이티브 테스트에서 제외 (JVM에서는 정상 실행)
 @DataJpaTest
 @Import({AccountPersistenceAdapter.class, AccountMapper.class})
+@DisabledInNativeImage
 class AccountPersistenceAdapterTest {
 
     @Autowired private AccountPersistenceAdapter adapterUnderTest;

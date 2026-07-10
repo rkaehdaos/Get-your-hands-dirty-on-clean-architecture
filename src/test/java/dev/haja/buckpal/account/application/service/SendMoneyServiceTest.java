@@ -12,6 +12,7 @@ import dev.haja.buckpal.account.domain.Money;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -27,7 +28,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
+// Mockito는 ByteBuddy로 런타임에 동적 프록시/클래스를 생성하므로 네이티브 이미지(closed-world)에서 실행 불가 → 네이티브 테스트에서 제외
 @Slf4j
+@DisabledInNativeImage
 class SendMoneyServiceTest {
 
     private final LoadAccountPort loadAccountPort = Mockito.mock(LoadAccountPort.class);

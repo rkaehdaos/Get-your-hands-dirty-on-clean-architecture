@@ -5,12 +5,15 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
 import dev.haja.java2kotlin.archunit.hexagonalArchitecture
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledInNativeImage
 
 /**
  * Kotlin DSL을 사용한 헥사고날 아키텍처 의존성 규칙 테스트
  *
  * @see dev.haja.java2kotlin.archunit.HexagonalArchitecture
  */
+// ArchUnit은 런타임에 클래스패스의 .class 바이트코드를 스캔하므로 네이티브 이미지에서 실행 불가 → 네이티브 테스트에서 제외
+@DisabledInNativeImage
 class KotlinDependencyRuleTests {
 
     private val allClasses = ClassFileImporter().importPackages("dev.haja.buckpal")

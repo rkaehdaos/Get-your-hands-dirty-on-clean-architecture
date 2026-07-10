@@ -7,6 +7,7 @@ import dev.haja.buckpal.account.domain.Money;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 // Spring Boot 4.0: 패키지 변경
@@ -21,9 +22,12 @@ import static dev.haja.buckpal.account.domain.Account.AccountId;
 import static org.assertj.core.api.BDDAssertions.then;
 
 
+// Hibernate가 네이티브 이미지에서 ServiceLoader로 ByteBuddy BytecodeProvider를 찾지 못해
+// (BytecodeProviderImpl not found) JPA 컨텍스트 로드에 실패 → 네이티브 테스트에서 제외 (JVM에서는 정상 실행)
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate  // Spring Boot 4.0: TestRestTemplate 자동 구성 필요
+@DisabledInNativeImage
 public class SendMoneySystemTest {
 
     @Autowired 

@@ -11,6 +11,7 @@ import dev.haja.buckpal.account.application.port.in.SendMoneyCommand;
 import dev.haja.buckpal.account.application.port.in.SendMoneyUseCase;
 import dev.haja.buckpal.account.domain.Money;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.springframework.beans.factory.annotation.Autowired;
 // Spring Boot 4.0: 패키지 변경
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -22,7 +23,9 @@ import tools.jackson.databind.ObjectMapper;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.verifyNoInteractions;
 
+// @MockitoBean이 생성하는 Mockito mock은 런타임 동적 프록시라 네이티브 이미지에서 실행 불가 → 네이티브 테스트에서 제외
 @WebMvcTest(controllers = SendMoneyController.class)
+@DisabledInNativeImage
 class SendMoneyControllerTest {
 
     @Autowired private MockMvc mockMvc;

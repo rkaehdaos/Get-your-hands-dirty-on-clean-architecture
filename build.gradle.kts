@@ -245,9 +245,10 @@ tasks.named<Test>("test") {
         events("passed", "skipped", "failed")
     }
 }
-tasks.named("processTestAot").configure {
-    enabled = false
-}
+// NOTE: processTestAot는 활성화 유지.
+// 네이티브 테스트(nativeTest)에서 Spring TestContext 프레임워크가 동작하려면
+// 테스트 AOT가 생성하는 리플렉션/리소스 메타데이터가 필요하다.
+// (비활성화 시 BootstrapUtils 초기화 실패 → WebAppConfiguration ClassNotFoundException)
 
 kotlin {
     jvmToolchain {
