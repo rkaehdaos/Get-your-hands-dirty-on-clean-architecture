@@ -27,11 +27,6 @@ version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 description = "Get-your-hands-dirty-on-clean-architecture"
 
-// CVE-2025-48924 보안 취약점 해결
-// io.spring.dependency-management가 resolutionStrategy.force보다 우선하므로,
-// Spring Boot BOM의 commons-lang3 버전 프로퍼티를 카탈로그 값으로 직접 오버라이드
-extra["commons-lang3.version"] = libs.versions.commonsLang3.get()
-
 configurations {
     compileOnly { extendsFrom(configurations.annotationProcessor.get()) }
     testCompileOnly { extendsFrom(configurations.testAnnotationProcessor.get()) }
