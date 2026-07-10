@@ -24,6 +24,9 @@ archunit = "1.4.2"
 mockitoKotlin = "6.3.0"
 lombokMapstructBinding = "0.2.0"
 
+# 4) 정적 분석
+pmd = "7.24.0"
+
 [libraries]
 # Spring Boot BOM (platform)
 spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBoot" }

@@ -98,6 +98,13 @@ class SendMoneyServiceTest {
         boolean success = sendMoneyService.sendMoney(sendMoneyCommand);
         assertThat(success).isTrue();
 
+        thenTransferHasBeenExecuted(
+            sourceAccount, sourceAccountId, targetAccount, targetAccountId, money);
+    }
+
+    private void thenTransferHasBeenExecuted(
+        Account sourceAccount, AccountId sourceAccountId,
+        Account targetAccount, AccountId targetAccountId, Money money) {
         then(accountLock).should().lockAccount(eq(sourceAccountId));
         then(sourceAccount).should().withdraw(eq(money), eq(targetAccountId));
         then(accountLock).should().releaseAccount(eq(sourceAccountId));
