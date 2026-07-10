@@ -24,6 +24,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./gradlew test --tests "클래스명.메서드명"   # 특정 테스트 메서드
 ```
 
+### 정적 분석
+```bash
+./gradlew check           # 테스트 + 모든 정적 분석 실행
+./gradlew pmdMain         # PMD (Java 프로덕션 소스 대상)
+./gradlew detekt          # detekt (Kotlin 프로덕션 소스 대상)
+```
+- 정책: 프로덕션 소스(`main`)만 분석, 테스트·AOT 생성 소스는 제외
+- 룰셋: `.github/pmd/ruleset.xml`, `.github/detekt/detekt.yml`
+
 ### 네이티브 이미지 (GraalVM)
 ```bash
 ./gradlew nativeCompile   # 네이티브 이미지 컴파일
@@ -67,6 +76,7 @@ src/main/java/dev/haja/buckpal/account/
 - **영속성**: Spring Data JPA + H2 (개발/테스트) / PostgreSQL (운영)
 - **테스트**: JUnit 5, Kotest, MockK, ArchUnit
 - **매핑**: MapStruct + Lombok (Kotlin 마이그레이션 후 Lombok 제거 예정)
+- **정적 분석**: PMD(Java) + detekt(Kotlin) — 언어별 분담, 버전은 `gradle/libs.versions.toml` 참조
 
 ## 테스트 표준
 

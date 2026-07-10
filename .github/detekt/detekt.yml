@@ -1,0 +1,9 @@
+# detekt 커스텀 설정 (Kotlin 정적 분석)
+# build.gradle.kts에서 buildUponDefaultConfig = true 이므로 기본 룰셋 위에 아래 항목만 오버레이됨.
+# 문서: https://detekt.dev/docs/introduction/configurations
+
+complexity:
+  LongMethod:
+    # PMD NcssCount methodReportLevel(30줄)과 정합 (.github/pmd/ruleset.xml 참조)
+    # detekt 2.0부터 threshold → allowedLines 로 속성명 변경됨
+    allowedLines: 30

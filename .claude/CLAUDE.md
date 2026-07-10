@@ -37,8 +37,14 @@
 
 ### 빌드 설정 특이사항
 - **KAPT + annotationProcessor 병행**: Java/Kotlin 혼용 기간 동안 MapStruct, Lombok 처리
+- **KSP 플러그인 적용**: 플러그인만 등록된 상태 (아직 `ksp()` 의존성 미사용, 향후 KAPT 대체 예정)
 - **duplicatesStrategy = EXCLUDE**: JAR 빌드 시 중복 파일 충돌 방지
 - **allWarningsAsErrors = true**: Kotlin 컴파일 경고를 에러로 처리
+
+### 정적 분석 (언어별 분담)
+- **PMD**: Java 프로덕션 소스(`main`) 담당 — 커스텀 룰셋만 적용(`.github/pmd/ruleset.xml`), 내장 기본 룰셋 비활성화
+- **detekt**: Kotlin 프로덕션 소스(`src/main/kotlin`) 담당 — `.github/detekt/detekt.yml` 오버레이 (detekt 2.0부터 플러그인 ID `dev.detekt`)
+- **공통 정책**: 테스트·AOT 생성 소스는 분석 제외, 위반 시 빌드 실패(`isIgnoreFailures = false`)
 
 ### 주요 의존성 버전 관리
 모든 버전은 Gradle Version Catalog(`gradle/libs.versions.toml`)에서 중앙 관리:
@@ -58,7 +64,7 @@ src/main/resources/
 ## 테스트 구조
 
 ```
-src/test/java/dev/haja/buckpal/
+src/test/java/dev/haja/buckpal/       # BuckPal 본체 (Java)
 ├── DependencyRuleTests.java      # 아키텍처 규칙 테스트
 ├── SendMoneySystemTest.java      # E2E 시스템 테스트
 ├── account/
@@ -69,7 +75,14 @@ src/test/java/dev/haja/buckpal/
 │       └── out/persistence/      # 영속성 통합 테스트 (@DataJpaTest)
 ├── archunit/                     # 커스텀 ArchUnit DSL
 └── common/                       # 테스트 데이터 팩토리
+
+src/test/kotlin/dev/haja/java2kotlin/  # Kotlin 마이그레이션 학습 모듈
+├── KotlinDependencyRuleTests.kt      # Kotlin 아키텍처 규칙 테스트
+├── LongestLegOver*.kt                # JUnit5 / Kotest / Kotest-BDD 스타일 예제
+└── archunit/                         # Kotlin 포팅 ArchUnit DSL
 ```
+
+> `src/main/kotlin/dev/haja/`에는 BuckPal 본체와 별개로 `java2kotlin/`(Kotlin 마이그레이션 학습)과 `sample/`(HelloWorld) 모듈이 존재
 
 ### 테스트 라이브러리 사용
 - **JUnit 5 + BDDMockito**: Java 코드 테스트

@@ -4,6 +4,8 @@ import java.time.format.DateTimeFormatter
 
 plugins {
     java
+    pmd
+    alias(libs.plugins.detekt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.dependency.management)
@@ -26,11 +28,6 @@ val releaseVer: String = providers.gradleProperty("releaseVer").get()
 version =
     "$releaseVer-${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}"
 description = "Get-your-hands-dirty-on-clean-architecture"
-
-// CVE-2025-48924 보안 취약점 해결
-// io.spring.dependency-management가 resolutionStrategy.force보다 우선하므로,
-// Spring Boot BOM의 commons-lang3 버전 프로퍼티를 카탈로그 값으로 직접 오버라이드
-extra["commons-lang3.version"] = libs.versions.commonsLang3.get()
 
 configurations {
     compileOnly { extendsFrom(configurations.annotationProcessor.get()) }
@@ -188,6 +185,35 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
+// PMD 정적 분석: 커스텀 룰셋만 적용 (NcssCount 메서드 15줄 제한 등)
+// 프로덕션 Java 소스(main)만 분석 대상 (Kotlin 파일 및 테스트 소스는 제외)
+pmd {
+    toolVersion = libs.versions.pmd.get()
+    ruleSetFiles = files(".github/pmd/ruleset.xml")
+    ruleSets = listOf()          // 내장 기본 룰셋 비활성화, 커스텀 룰셋만 사용
+    isConsoleOutput = true
+    isIgnoreFailures = false     // 위반 시 빌드 실패
+}
+
+// PMD 분석 제외 대상:
+// - test: 테스트 소스는 프로덕션 코드 품질 규칙 대상에서 제외
+// - aot/aotTest: Spring Boot AOT가 생성하는 코드 (compileAotJava의 -Xlint:none과 동일 취지)
+tasks.matching {
+    it.name == "pmdTest" || it.name == "pmdAot" || it.name == "pmdAotTest"
+}.configureEach {
+    enabled = false
+}
+
+// detekt 정적 분석: Kotlin 소스 담당 (Java는 PMD가 담당)
+// PMD와 동일 정책: 프로덕션 소스(main)만 분석, 테스트 소스는 제외
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    buildUponDefaultConfig = true                   // 기본 룰셋 위에 커스텀 설정 오버레이
+    config.setFrom(".github/detekt/detekt.yml")     // 커스텀 설정 (PMD 룰셋과 동일하게 .github 하위 배치)
+    source.setFrom("src/main/kotlin")               // 프로덕션 Kotlin만 (detekt 기본값은 test 포함이므로 명시적 한정)
+    ignoreFailures = false                          // 위반 시 빌드 실패 (PMD와 동일 정책)
+}
+
 // JAR 태스크: 중복 파일 처리 전략 (KAPT + annotationProcessor 병행 시)
 tasks.named<Jar>("jar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -209,6 +235,19 @@ tasks.named("compileAotJava", JavaCompile::class) {
     ))
 }
 
+// GraalVM 네이티브 이미지: Hibernate ByteBuddy BytecodeProvider 서비스 디스크립터를 이미지에서 제외.
+// 최신 GraalVM(JDK 25)은 서비스 디스크립터 리소스를 무조건 이미지에 포함하는데, spring-orm은
+// ServiceLoaderFeature 등록만 배제하므로 런타임 ServiceLoader가 디스크립터는 읽되 클래스는 못 찾아
+// "BytecodeProviderImpl not found"로 JPA 컨텍스트 로드가 실패한다(spring-framework#35118).
+// 리소스 자체를 제외하면 ServiceLoader 결과가 비고, Hibernate 7.x가 no-op(none) BytecodeProvider로
+// 폴백한다(BytecodeProviderInitiator.getBytecodeProvider: 빈 iterator → new none.BytecodeProviderImpl).
+// 네이티브 런타임은 런타임 바이트코드 생성이 불가하므로 none provider가 정상 경로다.
+graalvmNative {
+    binaries.all {
+        buildArgs.add("-H:ExcludeResources=META-INF/services/org\\.hibernate\\.bytecode\\.spi\\.BytecodeProvider")
+    }
+}
+
 tasks.withType<Test> {
     // Test 유형의 모든 테스트 task 공통 configure 용
 }
@@ -219,9 +258,10 @@ tasks.named<Test>("test") {
         events("passed", "skipped", "failed")
     }
 }
-tasks.named("processTestAot").configure {
-    enabled = false
-}
+// NOTE: processTestAot는 활성화 유지.
+// 네이티브 테스트(nativeTest)에서 Spring TestContext 프레임워크가 동작하려면
+// 테스트 AOT가 생성하는 리플렉션/리소스 메타데이터가 필요하다.
+// (비활성화 시 BootstrapUtils 초기화 실패 → WebAppConfiguration ClassNotFoundException)
 
 kotlin {
     jvmToolchain {
