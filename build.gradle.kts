@@ -185,7 +185,7 @@ tasks.withType<JavaCompile> {
 }
 
 // PMD 정적 분석: 커스텀 룰셋만 적용 (NcssCount 메서드 15줄 제한 등)
-// Kotlin 파일은 PMD 대상이 아님 (Java 소스만 분석)
+// 프로덕션 Java 소스(main)만 분석 대상 (Kotlin 파일 및 테스트 소스는 제외)
 pmd {
     toolVersion = libs.versions.pmd.get()
     ruleSetFiles = files(".github/pmd/ruleset.xml")
@@ -194,9 +194,12 @@ pmd {
     isIgnoreFailures = false     // 위반 시 빌드 실패
 }
 
-// Spring Boot AOT가 추가하는 aot/aotTest 소스셋은 생성 코드이므로 PMD 분석 제외
-// (compileAotJava의 -Xlint:none 처리와 동일한 취지)
-tasks.matching { it.name == "pmdAot" || it.name == "pmdAotTest" }.configureEach {
+// PMD 분석 제외 대상:
+// - test: 테스트 소스는 프로덕션 코드 품질 규칙 대상에서 제외
+// - aot/aotTest: Spring Boot AOT가 생성하는 코드 (compileAotJava의 -Xlint:none과 동일 취지)
+tasks.matching {
+    it.name == "pmdTest" || it.name == "pmdAot" || it.name == "pmdAotTest"
+}.configureEach {
     enabled = false
 }
 
