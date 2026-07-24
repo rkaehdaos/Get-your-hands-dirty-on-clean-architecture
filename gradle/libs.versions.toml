@@ -11,7 +11,7 @@ java = "25"
 springBoot = "4.1.0"
 dependencyManagement = "1.1.7"
 nativeBuild = "1.1.4"
-hibernate = "7.4.3.Final"
+hibernate = "7.4.4.Final"
 ksp = "2.3.10"
 
 # 3) 라이브러리
